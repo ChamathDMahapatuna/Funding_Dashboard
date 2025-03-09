@@ -1,0 +1,81 @@
+// src/components/Sidebar.jsx
+import { useState } from 'react';
+import { 
+  HomeIcon, 
+  MagnifyingGlassIcon, 
+  CurrencyDollarIcon, 
+  BuildingOfficeIcon, 
+  UserGroupIcon, 
+  Cog6ToothIcon, 
+  ArrowLeftOnRectangleIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon
+} from '@heroicons/react/24/outline';
+
+function Sidebar({ currentPage, setCurrentPage }) {
+  const [expanded, setExpanded] = useState(true);
+
+  const navigationItems = [
+    { id: 'dashboard', icon: <HomeIcon className="h-6 w-6" />, label: 'Dashboard' },
+    { id: 'advancedSearch', icon: <MagnifyingGlassIcon className="h-6 w-6" />, label: 'Advanced Search' },
+    { id: 'fundingDetails', icon: <CurrencyDollarIcon className="h-6 w-6" />, label: 'Funding Details' },
+    { id: 'companyProfile', icon: <BuildingOfficeIcon className="h-6 w-6" />, label: 'Companies' },
+    { id: 'investors', icon: <UserGroupIcon className="h-6 w-6" />, label: 'Investors' }
+  ];
+
+  return (
+    <div className={`bg-slate-800 text-white transition-all duration-300 ${expanded ? 'w-64' : 'w-20'}`}>
+      <div className="flex items-center justify-between p-4 border-b border-slate-700">
+        <div className="flex items-center">
+          <div className="bg-blue-500 text-white h-8 w-8 rounded flex items-center justify-center font-bold">
+            PB
+          </div>
+          {expanded && <span className="ml-3 font-semibold text-lg">PropTech</span>}
+        </div>
+        <button 
+          onClick={() => setExpanded(!expanded)}
+          className="text-gray-400 hover:text-white"
+        >
+          {expanded ? 
+            <ChevronLeftIcon className="h-5 w-5" /> : 
+            <ChevronRightIcon className="h-5 w-5" />
+          }
+        </button>
+      </div>
+
+      <nav className="mt-6">
+        <ul>
+          {navigationItems.map((item) => (
+            <li 
+              key={item.id}
+              className={`
+                px-4 py-3 flex items-center cursor-pointer
+                transition-colors duration-200
+                ${currentPage === item.id ? 'bg-blue-600' : 'hover:bg-slate-700'}
+              `}
+              onClick={() => setCurrentPage(item.id)}
+            >
+              <div>{item.icon}</div>
+              {expanded && <span className="ml-3">{item.label}</span>}
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div className="absolute bottom-0 w-full border-t border-slate-700">
+        <ul>
+          <li className="px-4 py-3 flex items-center cursor-pointer hover:bg-slate-700">
+            <Cog6ToothIcon className="h-6 w-6" />
+            {expanded && <span className="ml-3">Settings</span>}
+          </li>
+          <li className="px-4 py-3 flex items-center cursor-pointer hover:bg-slate-700">
+            <ArrowLeftOnRectangleIcon className="h-6 w-6" />
+            {expanded && <span className="ml-3">Logout</span>}
+          </li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+export default Sidebar;
