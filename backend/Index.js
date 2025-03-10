@@ -14,7 +14,9 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());
-app.use(cors({ origin: ["https://yourfrontend.com"] })); // Restrict CORS
+app.use(cors({
+    origin: '*', // Allow all origins (for development only)
+  }));
 app.use(morgan("dev")); // Logging requests
 
 // Database Connection
