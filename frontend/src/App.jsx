@@ -3,17 +3,19 @@ import { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
-import advancedSearch from './components/AdvancedSearch';
+import AdvancedSearch from './components/AdvancedSearch'; // Correct import
+import FundingDetails from './components/FundingDetails.jsx';
+import CompanyProfile from './components/CompanyProfile';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
   
   const renderPage = () => {
-    switch(currentPage) {
+    switch (currentPage) {
       case 'dashboard':
         return <Dashboard />;
       case 'advancedSearch':
-        return <advancedSearch />;
+        return <AdvancedSearch />; // Correct component reference
       case 'fundingDetails':
         return <FundingDetails />;
       case 'companyProfile':

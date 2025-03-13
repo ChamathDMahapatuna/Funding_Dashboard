@@ -1,4 +1,3 @@
-// src/pages/Dashboard.jsx
 import { useState, useEffect } from 'react';
 import { 
   ArrowUpIcon, 
@@ -23,125 +22,227 @@ import {
   LineChart, 
   Line 
 } from 'recharts';
+import axios from 'axios'; // Make sure to install axios: npm install axios
 
 function Dashboard() {
   const [companies, setCompanies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [stats, setStats] = useState([]);
+  const [fundingByYearData, setFundingByYearData] = useState([]);
+  const [propTypeData, setPropTypeData] = useState([]);
+  const [valuationTrendData, setValuationTrendData] = useState([]);
+  const [topFundedCompanies, setTopFundedCompanies] = useState([]);
+  const [error, setError] = useState(null);
+
+  const API_URL = 'http://localhost:5000/api/fundings'; // Adjust based on your API setup
 
   useEffect(() => {
-    // This would be your API call in a real application
-    // For now, we'll simulate loading sample data
-    setTimeout(() => {
-      // Sample data - In real app, this would come from your API
-      const sampleData = [
-        {
-          Name: "Aurora Solar",
-          Technology: "Solar",
-          "Prop Type": "ALL",
-          "Total Funding": "$523,500,000",
-          "Estimated ARR": "$10,000,000",
-          "Latest Valuation": "$4,000,000,000",
-          "Latest Valuation Year": "2022",
-          "# of Funding Rounds": "4",
-          "Founded": "2013",
-          "Years Active": "12",
-          "City": "San Francisco",
-          "State": "CA"
-        },
-        {
-          Name: "EquipmentShare",
-          Technology: "Equipment Rental",
-          "Prop Type": "Construction",
-          "Total Funding": "$2,011,800,000",
-          "Estimated ARR": "$300,000,000",
-          "Latest Valuation": "$3,890,000,000",
-          "Latest Valuation Year": "2023",
-          "# of Funding Rounds": "7",
-          "Founded": "2014",
-          "Years Active": "11",
-          "City": "Columbia",
-          "State": "MO"
-        },
-        // Add more data here...
-      ];
-      
-      setCompanies(sampleData);
-      setIsLoading(false);
-    }, 1000);
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(API_URL);
+        const data = response.data;
+        console.log("Fetched data:", response.data); // Debugging
+        
+        // Set the raw company data
+        setCompanies(data);
+        
+        // Process data for other visualizations
+        processData(data);
+        
+        setIsLoading(false);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError(err.message);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  // Funding Distribution by Property Type
-  const propTypeData = [
-    { name: 'Residential', value: 42 },
-    { name: 'Commercial', value: 28 },
-    { name: 'All Types', value: 18 },
-    { name: 'Construction', value: 8 },
-    { name: 'Multifamily', value: 4 },
-  ];
+  const processData = (data) => {
+    if (!data.length) return;
 
-  // Funding by Year data
-  const fundingByYearData = [
-    { year: '2017', amount: 120 },
-    { year: '2018', amount: 250 },
-    { year: '2019', amount: 380 },
-    { year: '2020', amount: 470 },
-    { year: '2021', amount: 780 },
-    { year: '2022', amount: 890 },
-    { year: '2023', amount: 650 },
-  ];
+    // Calculate summary statistics
+    const totalCompanies = data.length;
+    
+    // Calculate total funding (removing $ and commas and converting to number)
+    const totalFunding = data.reduce((sum, company) => {
+      const funding = company['Total Funding'] ? 
+        parseFloat(company['Total Funding'].replace(/[$,]/g, '')) : 0;
+      return sum + funding;
+    }, 0);
+    
+    // Format total funding in billions
+    const formattedTotalFunding = `$${(totalFunding / 1000000000).toFixed(1)}B`;
+    
+    // Calculate average company age
+    const currentYear = new Date().getFullYear();
+    const avgAge = data.reduce((sum, company) => {
+      const founded = company.Founded ? parseInt(company.Founded) : currentYear;
+      return sum + (currentYear - founded);
+    }, 0) / totalCompanies;
+    
+    // Calculate average funding rounds
+    const avgRounds = data.reduce((sum, company) => {
+      const rounds = company['# of Funding Rounds'] ? 
+        parseInt(company['# of Funding Rounds']) : 0;
+      return sum + rounds;
+    }, 0) / totalCompanies;
 
-  // Valuation growth data
-  const valuationTrendData = [
-    { year: '2017', value: 1.2 },
-    { year: '2018', value: 1.8 },
-    { year: '2019', value: 2.4 },
-    { year: '2020', value: 2.9 },
-    { year: '2021', value: 3.6 },
-    { year: '2022', value: 4.2 },
-    { year: '2023', value: 3.8 },
-  ];
+    // Set stats
+    setStats([
+      { 
+        title: 'Total Companies', 
+        value: totalCompanies.toString(), 
+        change: '+2.5%', // You might calculate this based on historical data
+        isPositive: true,
+        icon: <BuildingOfficeIcon className="h-8 w-8 text-blue-500" />
+      },
+      { 
+        title: 'Total Funding', 
+        value: formattedTotalFunding, 
+        change: '+15.2%', // You might calculate this based on historical data
+        isPositive: true,
+        icon: <CurrencyDollarIcon className="h-8 w-8 text-green-500" />
+      },
+      { 
+        title: 'Avg. Company Age', 
+        value: `${avgAge.toFixed(1)} yrs`, 
+        change: '+0.7', // You might calculate this based on historical data
+        isPositive: true,
+        icon: <ClockIcon className="h-8 w-8 text-purple-500" />
+      },
+      { 
+        title: 'Avg. Funding Rounds', 
+        value: avgRounds.toFixed(1), 
+        change: '+0.8', // You might calculate this based on historical data
+        isPositive: true,
+        icon: <ChartBarIcon className="h-8 w-8 text-orange-500" />
+      },
+    ]);
+
+    // Process property type data
+    const propTypes = {};
+    data.forEach(company => {
+      const type = company['Prop Type'] || 'Unknown';
+      propTypes[type] = (propTypes[type] || 0) + 1;
+    });
+
+      // Convert to array and sort by frequency
+    let propTypeArray = Object.entries(propTypes).map(([name, count]) => ({
+      name,
+      count,
+      percentage: Math.round((count / totalCompanies) * 100)
+    }));
+    // Sort by count (descending)
+    
+    propTypeArray.sort((a, b) => b.count - a.count);
+
+    propTypeArray.sort((a, b) => b.count - a.count);
+
+    // Take top 10 categories, then group the rest as "Other"
+    if (propTypeArray.length > 10) {
+      const topCategories = propTypeArray.slice(0, 10);
+      const otherCategories = propTypeArray.slice(10);
+      
+      const otherCount = otherCategories.reduce((sum, item) => sum + item.count, 0);
+      const otherPercentage = Math.round((otherCount / totalCompanies) * 100);
+      
+      propTypeArray = [
+        ...topCategories,
+        { name: 'Other', count: otherCount, percentage: otherPercentage }
+      ];
+    }
+  
+    setPropTypeData(propTypeArray);
+
+    // Process funding by year data
+    const fundingByYear = {};
+    data.forEach(company => {
+      // Check for each round type and add to the appropriate year
+      const roundTypes = [
+        'Pre-Seed Date', 'Seed Date', 'Bridge Date', 'A Round Date', 
+        'B Round Date', 'C Round Date', 'D Round Date', 'E Round Date',
+        'F Round Date', 'G Round Date', 'H Round Date', 'Unknown Series Date'
+      ];
+      
+      const amountTypes = [
+        'Pre-Seed $', 'Seed $', 'Bridge $', 'A Round $', 
+        'B Round $', 'C Round $', 'D Round $', 'E Round $',
+        'F Round $', 'G Round $', 'H Round $', 'Unknown Series $'
+      ];
+      
+      roundTypes.forEach((dateField, index) => {
+        if (company[dateField]) {
+          const year = company[dateField].split('/')[2] || company[dateField].split('-')[0];
+          if (year && !isNaN(parseInt(year))) {
+            const amountField = amountTypes[index];
+            const amount = company[amountField] ? 
+              parseFloat(company[amountField].replace(/[$,]/g, '')) : 0;
+            
+            fundingByYear[year] = (fundingByYear[year] || 0) + amount;
+          }
+        }
+      });
+    });
+
+    const processedFundingByYear = Object.entries(fundingByYear)
+      .map(([year, amount]) => ({
+        year,
+        amount: Math.round(amount / 1000000) // Convert to millions
+      }))
+      .sort((a, b) => parseInt(a.year) - parseInt(b.year));
+    
+    setFundingByYearData(processedFundingByYear);
+
+    // Process valuation trend data
+    const valuationsByYear = {};
+    let companyCountByYear = {};
+    
+    data.forEach(company => {
+      if (company['Latest Valuation'] && company['Latest Valuation Year']) {
+        const year = company['Latest Valuation Year'].toString();
+        const valuation = parseFloat(company['Latest Valuation'].replace(/[$,]/g, ''));
+        
+        if (!isNaN(valuation)) {
+          valuationsByYear[year] = (valuationsByYear[year] || 0) + valuation;
+          companyCountByYear[year] = (companyCountByYear[year] || 0) + 1;
+        }
+      }
+    });
+
+    const processedValuationData = Object.entries(valuationsByYear)
+      .map(([year, totalValuation]) => ({
+        year,
+        value: (totalValuation / companyCountByYear[year] / 1000000000).toFixed(1) // Average in billions
+      }))
+      .sort((a, b) => parseInt(a.year) - parseInt(b.year));
+    
+    setValuationTrendData(processedValuationData);
+
+    // Process top funded companies
+    const sortedByFunding = [...data].sort((a, b) => {
+      const fundingA = a['Total Funding'] ? 
+        parseFloat(a['Total Funding'].replace(/[$,]/g, '')) : 0;
+      const fundingB = b['Total Funding'] ? 
+        parseFloat(b['Total Funding'].replace(/[$,]/g, '')) : 0;
+      return fundingB - fundingA;
+    });
+
+    const processedTopFundedCompanies = sortedByFunding.slice(0, 5).map(company => ({
+      name: company.Name,
+      amount: company['Total Funding'] || 'N/A',
+      valuation: company['Latest Valuation'] || 'N/A',
+      founded: company.Founded?.toString() || 'N/A',
+      rounds: company['# of Funding Rounds']?.toString() || 'N/A'
+    }));
+    
+    setTopFundedCompanies(processedTopFundedCompanies);
+  };
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
-
-  const stats = [
-    { 
-      title: 'Total Companies', 
-      value: '18', 
-      change: '+2.5%', 
-      isPositive: true,
-      icon: <BuildingOfficeIcon className="h-8 w-8 text-blue-500" />
-    },
-    { 
-      title: 'Total Funding', 
-      value: '$12.4B', 
-      change: '+15.2%', 
-      isPositive: true,
-      icon: <CurrencyDollarIcon className="h-8 w-8 text-green-500" />
-    },
-    { 
-      title: 'Avg. Company Age', 
-      value: '8.9 yrs', 
-      change: '+0.7', 
-      isPositive: true,
-      icon: <ClockIcon className="h-8 w-8 text-purple-500" />
-    },
-    { 
-      title: 'Avg. Funding Rounds', 
-      value: '5.3', 
-      change: '+0.8', 
-      isPositive: true,
-      icon: <ChartBarIcon className="h-8 w-8 text-orange-500" />
-    },
-  ];
-
-  // Top funded companies
-  const topFundedCompanies = [
-    { name: 'EquipmentShare', amount: '$2,011,800,000', valuation: '$3,890,000,000', founded: '2014', rounds: '7' },
-    { name: 'Enpal', amount: '$1,780,000,000', valuation: '$2,400,000,000', founded: '2017', rounds: '3' },
-    { name: 'Pacaso', amount: '$1,467,000,000', valuation: '$1,500,000,000', founded: '2020', rounds: '4' },
-    { name: 'Divvy Homes', amount: '$1,225,000,000', valuation: '$2,000,000,000', founded: '2017', rounds: '6' },
-    { name: 'Loft', amount: '$888,000,000', valuation: '$2,900,000,000', founded: '2018', rounds: '5' },
-  ];
 
   return (
     <div>
@@ -159,6 +260,14 @@ function Dashboard() {
           </button>
         </div>
       </div>
+
+      {/* Error message */}
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6" role="alert">
+          <p className="font-bold">Error</p>
+          <p>{error}</p>
+        </div>
+      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -180,105 +289,154 @@ function Dashboard() {
           </div>
         ))}
       </div>
-
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+  {/* Charts */}
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div className="bg-white rounded-lg shadow p-4">
           <h2 className="text-lg font-semibold mb-4">Funding by Year</h2>
           <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={fundingByYearData}
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="year" />
-                <YAxis />
-                <Tooltip 
-                  formatter={(value) => [`$${value}M`, 'Amount']}
-                  labelFormatter={(label) => `Year: ${label}`}
-                />
-                <Bar dataKey="amount" fill="#3B82F6" />
-              </BarChart>
-            </ResponsiveContainer>
+            {isLoading ? (
+              <div className="flex justify-center items-center h-full">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-solid border-blue-600 border-r-transparent"></div>
+              </div>
+            ) : fundingByYearData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={fundingByYearData}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="year" />
+                  <YAxis />
+                  <Tooltip 
+                    formatter={(value) => [`$${value}M`, 'Amount']}
+                    labelFormatter={(label) => `Year: ${label}`}
+                  />
+                  <Bar dataKey="amount" fill="#3B82F6" />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex justify-center items-center h-full text-gray-500">
+                No funding data available
+              </div>
+            )}
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-4">Funding by Property Type</h2>
-          <div className="h-64">
+        <h2 className="text-lg font-semibold mb-4">Funding by Property Type</h2>
+        <div className="h-64">
+          {isLoading ? (
+            <div className="flex justify-center items-center h-full">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-solid border-blue-600 border-r-transparent"></div>
+            </div>
+          ) : propTypeData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={propTypeData}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={90}
-                  dataKey="value"
-                  labelLine={false}
-                  label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                >
-                  {propTypeData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip formatter={(value) => [`${value}%`, 'Percentage']} />
-              </PieChart>
+              <BarChart
+                data={propTypeData}
+                layout="vertical"
+                margin={{ top: 5, right: 30, left: 100, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" domain={[0, 'dataMax']} />
+                <YAxis 
+                  type="category" 
+                  dataKey="name" 
+                  width={90}
+                  tick={{ fontSize: 12 }}
+                />
+                <Tooltip 
+                  formatter={(value, name, props) => [`${props.payload.percentage}% (${value} companies)`, 'Count']}
+                />
+                <Bar 
+                  dataKey="count" 
+                  fill="#3B82F6"
+                  label={{ 
+                    position: 'right', 
+                    formatter: (item) => `${item.percentage}%`,
+                    fontSize: 12
+                  }}
+                />
+              </BarChart>
             </ResponsiveContainer>
-          </div>
+          ) : (
+            <div className="flex justify-center items-center h-full text-gray-500">
+              No property type data available
+            </div>
+          )}
         </div>
+      </div>
 
         <div className="bg-white rounded-lg shadow p-4">
           <h2 className="text-lg font-semibold mb-4">Valuation Trends (in $B)</h2>
           <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={valuationTrendData}
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="year" />
-                <YAxis />
-                <Tooltip 
-                  formatter={(value) => [`$${value}B`, 'Average Valuation']}
-                  labelFormatter={(label) => `Year: ${label}`}
-                />
-                <Line type="monotone" dataKey="value" stroke="#3B82F6" strokeWidth={2} />
-              </LineChart>
-            </ResponsiveContainer>
+            {isLoading ? (
+              <div className="flex justify-center items-center h-full">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-solid border-blue-600 border-r-transparent"></div>
+              </div>
+            ) : valuationTrendData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={valuationTrendData}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="year" />
+                  <YAxis />
+                  <Tooltip 
+                    formatter={(value) => [`$${value}B`, 'Average Valuation']}
+                    labelFormatter={(label) => `Year: ${label}`}
+                  />
+                  <Line type="monotone" dataKey="value" stroke="#3B82F6" strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex justify-center items-center h-full text-gray-500">
+                No valuation trend data available
+              </div>
+            )}
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow p-4">
           <h2 className="text-lg font-semibold mb-4">Top 5 Funded Companies</h2>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Funding</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Valuation</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Founded</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rounds</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {topFundedCompanies.map((company, index) => (
-                  <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{company.name}</td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{company.amount}</td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{company.valuation}</td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{company.founded}</td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{company.rounds}</td>
+            {isLoading ? (
+              <div className="flex justify-center items-center h-32">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-solid border-blue-600 border-r-transparent"></div>
+              </div>
+            ) : topFundedCompanies.length > 0 ? (
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Funding</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Valuation</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Founded</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rounds</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {topFundedCompanies.map((company, index) => (
+                    <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{company.name}</td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{company.amount}</td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{company.valuation}</td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{company.founded}</td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{company.rounds}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="flex justify-center items-center h-32 text-gray-500">
+                No company data available
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Recent Companies Table */}
+      {/* All Companies Table */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-semibold">Company Data</h2>
@@ -290,7 +448,7 @@ function Dashboard() {
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-solid border-blue-600 border-r-transparent"></div>
             <p className="mt-2 text-gray-500">Loading company data...</p>
           </div>
-        ) : (
+        ) : companies.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
@@ -332,6 +490,10 @@ function Dashboard() {
                 ))}
               </tbody>
             </table>
+          </div>
+        ) : (
+          <div className="p-8 text-center text-gray-500">
+            No company data available
           </div>
         )}
       </div>
