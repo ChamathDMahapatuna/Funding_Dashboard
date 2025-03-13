@@ -24,7 +24,7 @@ function Sidebar({ currentPage, setCurrentPage }) {
   ];
 
   return (
-    <div className={`bg-slate-800 text-white transition-all duration-300 ${expanded ? 'w-64' : 'w-20'}`}>
+    <div className={`bg-slate-800 text-white transition-all duration-300 ${expanded ? 'w-64' : 'w-20'} flex flex-col`}>
       <div className="flex items-center justify-between p-4 border-b border-slate-700">
         <div className="flex items-center">
           <div className="bg-blue-500 text-white h-8 w-8 rounded flex items-center justify-center font-bold">
@@ -43,7 +43,7 @@ function Sidebar({ currentPage, setCurrentPage }) {
         </button>
       </div>
 
-      <nav className="mt-6">
+      <nav className="mt-6 flex-grow">
         <ul>
           {navigationItems.map((item) => (
             <li 
@@ -62,13 +62,14 @@ function Sidebar({ currentPage, setCurrentPage }) {
         </ul>
       </nav>
 
-      <div className="absolute bottom-0 w-full border-t border-slate-700">
+      {/* Footer with Settings and Logout */}
+      <div className="mt-auto w-full border-t border-slate-700">
         <ul>
-          <li className="px-4 py-3 flex items-center cursor-pointer hover:bg-slate-700">
+          <li className="px-4 py-3 flex items-center cursor-pointer hover:bg-slate-700 w-full">
             <Cog6ToothIcon className="h-6 w-6" />
             {expanded && <span className="ml-3">Settings</span>}
           </li>
-          <li className="px-4 py-3 flex items-center cursor-pointer hover:bg-slate-700">
+          <li className="px-4 py-3 flex items-center cursor-pointer hover:bg-slate-700 w-full">
             <ArrowLeftOnRectangleIcon className="h-6 w-6" />
             {expanded && <span className="ml-3">Logout</span>}
           </li>

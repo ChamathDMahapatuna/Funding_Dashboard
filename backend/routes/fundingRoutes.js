@@ -12,11 +12,19 @@ router.get("/", async (req, res, next) => {
         next(err);
     }
 });
-
-// 🟢 **GET Single Funding by ID**
 router.get("/:id", async (req, res, next) => {
     try {
-        const funding = await Funding.findById(req.params.id);
+        // Try to find by _id if it's a valid ObjectId
+        let funding;
+        if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+            funding = await Funding.findById(req.params.id);
+            console.log("Received ID:", req.params.id); 
+          
+        } else {
+            // Try to find by another field, like a custom ID field
+            funding = await Funding.findOne({ customIdField: req.params.id });
+        }
+        
         if (!funding) return res.status(404).json({ message: "Funding entry not found" });
         res.status(200).json(funding);
     } catch (err) {

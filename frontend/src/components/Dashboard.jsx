@@ -130,11 +130,33 @@ function Dashboard() {
       propTypes[type] = (propTypes[type] || 0) + 1;
     });
 
-    const processedPropTypeData = Object.entries(propTypes).map(([name, value]) => ({
+      // Convert to array and sort by frequency
+    let propTypeArray = Object.entries(propTypes).map(([name, count]) => ({
       name,
-      value: Math.round((value / totalCompanies) * 100) // Convert to percentage
+      count,
+      percentage: Math.round((count / totalCompanies) * 100)
     }));
-    setPropTypeData(processedPropTypeData);
+    // Sort by count (descending)
+    
+    propTypeArray.sort((a, b) => b.count - a.count);
+
+    propTypeArray.sort((a, b) => b.count - a.count);
+
+    // Take top 10 categories, then group the rest as "Other"
+    if (propTypeArray.length > 10) {
+      const topCategories = propTypeArray.slice(0, 10);
+      const otherCategories = propTypeArray.slice(10);
+      
+      const otherCount = otherCategories.reduce((sum, item) => sum + item.count, 0);
+      const otherPercentage = Math.round((otherCount / totalCompanies) * 100);
+      
+      propTypeArray = [
+        ...topCategories,
+        { name: 'Other', count: otherCount, percentage: otherPercentage }
+      ];
+    }
+  
+    setPropTypeData(propTypeArray);
 
     // Process funding by year data
     const fundingByYear = {};
@@ -301,38 +323,48 @@ function Dashboard() {
         </div>
 
         <div className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-4">Funding by Property Type</h2>
-          <div className="h-64">
-            {isLoading ? (
-              <div className="flex justify-center items-center h-full">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-solid border-blue-600 border-r-transparent"></div>
-              </div>
-            ) : propTypeData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={propTypeData}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={90}
-                    dataKey="value"
-                    labelLine={false}
-                    label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                  >
-                    {propTypeData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => [`${value}%`, 'Percentage']} />
-                </PieChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="flex justify-center items-center h-full text-gray-500">
-                No property type data available
-              </div>
-            )}
-          </div>
+        <h2 className="text-lg font-semibold mb-4">Funding by Property Type</h2>
+        <div className="h-64">
+          {isLoading ? (
+            <div className="flex justify-center items-center h-full">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-solid border-blue-600 border-r-transparent"></div>
+            </div>
+          ) : propTypeData.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={propTypeData}
+                layout="vertical"
+                margin={{ top: 5, right: 30, left: 100, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" domain={[0, 'dataMax']} />
+                <YAxis 
+                  type="category" 
+                  dataKey="name" 
+                  width={90}
+                  tick={{ fontSize: 12 }}
+                />
+                <Tooltip 
+                  formatter={(value, name, props) => [`${props.payload.percentage}% (${value} companies)`, 'Count']}
+                />
+                <Bar 
+                  dataKey="count" 
+                  fill="#3B82F6"
+                  label={{ 
+                    position: 'right', 
+                    formatter: (item) => `${item.percentage}%`,
+                    fontSize: 12
+                  }}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="flex justify-center items-center h-full text-gray-500">
+              No property type data available
+            </div>
+          )}
         </div>
+      </div>
 
         <div className="bg-white rounded-lg shadow p-4">
           <h2 className="text-lg font-semibold mb-4">Valuation Trends (in $B)</h2>
