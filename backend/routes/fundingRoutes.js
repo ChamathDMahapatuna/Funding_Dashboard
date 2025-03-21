@@ -1,5 +1,6 @@
 import express from "express";
 import Funding from "../Models/FundingModel.js";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -12,20 +13,20 @@ router.get("/", async (req, res, next) => {
         next(err);
     }
 });
+
+// 🟢 **GET Single Funding by ID**
 router.get("/:id", async (req, res, next) => {
     try {
-        // Try to find by _id if it's a valid ObjectId
-        let funding;
-        if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-            funding = await Funding.findById(req.params.id);
-            console.log("Received ID:", req.params.id); 
-          
-        } else {
-            // Try to find by another field, like a custom ID field
-            funding = await Funding.findOne({ customIdField: req.params.id });
+        const { id } = req.params;
+
+        // Validate ObjectId format
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid funding ID format" });
         }
-        
+
+        const funding = await Funding.findById(id);
         if (!funding) return res.status(404).json({ message: "Funding entry not found" });
+
         res.status(200).json(funding);
     } catch (err) {
         next(err);
@@ -46,8 +47,15 @@ router.post("/", async (req, res, next) => {
 // 🟢 **PUT: Update Funding**
 router.put("/:id", async (req, res, next) => {
     try {
-        const updatedFunding = await Funding.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid funding ID format" });
+        }
+
+        const updatedFunding = await Funding.findByIdAndUpdate(id, req.body, { new: true });
         if (!updatedFunding) return res.status(404).json({ message: "Funding entry not found" });
+
         res.status(200).json(updatedFunding);
     } catch (err) {
         next(err);
@@ -57,8 +65,15 @@ router.put("/:id", async (req, res, next) => {
 // 🟢 **DELETE: Remove Funding**
 router.delete("/:id", async (req, res, next) => {
     try {
-        const deletedFunding = await Funding.findByIdAndDelete(req.params.id);
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid funding ID format" });
+        }
+
+        const deletedFunding = await Funding.findByIdAndDelete(id);
         if (!deletedFunding) return res.status(404).json({ message: "Funding entry not found" });
+
         res.status(200).json({ message: "Funding entry deleted successfully" });
     } catch (err) {
         next(err);
