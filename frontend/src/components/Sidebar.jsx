@@ -1,5 +1,5 @@
-// src/components/Sidebar.jsx
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { 
   HomeIcon, 
   MagnifyingGlassIcon, 
@@ -16,11 +16,10 @@ function Sidebar({ currentPage, setCurrentPage }) {
   const [expanded, setExpanded] = useState(true);
 
   const navigationItems = [
-    { id: 'dashboard', icon: <HomeIcon className="h-6 w-6" />, label: 'Dashboard' },
-    { id: 'advancedSearch', icon: <MagnifyingGlassIcon className="h-6 w-6" />, label: 'Advanced Search' },
-    { id: 'fundingDetails', icon: <CurrencyDollarIcon className="h-6 w-6" />, label: 'Funding Details' },
-    { id: 'companyProfile', icon: <BuildingOfficeIcon className="h-6 w-6" />, label: 'Companies' },
-    { id: 'investors', icon: <UserGroupIcon className="h-6 w-6" />, label: 'Investors' }
+    { id: 'dashboard', path: '/', icon: <HomeIcon className="h-6 w-6" />, label: 'Dashboard' },
+    { id: 'advancedSearch', path: '/advanced-search', icon: <MagnifyingGlassIcon className="h-6 w-6" />, label: 'Advanced Search' },
+    { id: 'fundingDetails', path: '/funding-details', icon: <CurrencyDollarIcon className="h-6 w-6" />, label: 'Funding Details' },
+    { id: 'companyProfile', path: '/company-profile', icon: <BuildingOfficeIcon className="h-6 w-6" />, label: 'Companies' },
   ];
 
   return (
@@ -55,8 +54,10 @@ function Sidebar({ currentPage, setCurrentPage }) {
               `}
               onClick={() => setCurrentPage(item.id)}
             >
-              <div>{item.icon}</div>
-              {expanded && <span className="ml-3">{item.label}</span>}
+              <Link to={item.path} className="flex items-center w-full">
+                <div>{item.icon}</div>
+                {expanded && <span className="ml-3">{item.label}</span>}
+              </Link>
             </li>
           ))}
         </ul>
