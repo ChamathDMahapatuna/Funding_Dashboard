@@ -1,40 +1,42 @@
-// src/App.jsx
+import { Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
+import { AuthProvider } from './context/AuthContext';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
-import AdvancedSearch from './components/AdvancedSearch'; // Correct import
+import AdvancedSearch from './components/AdvancedSearch';
 import FundingDetails from './components/FundingDetails.jsx';
 import CompanyProfile from './components/CompanyProfile';
+import Login from './pages/Login.jsx';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
-  
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'dashboard':
-        return <Dashboard />;
-      case 'advancedSearch':
-        return <AdvancedSearch />; // Correct component reference
-      case 'fundingDetails':
-        return <FundingDetails />;
-      case 'companyProfile':
-        return <CompanyProfile />;
-      default:
-        return <Dashboard />;
-    }
-  };
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-4">
-          {renderPage()}
-        </main>
-      </div>
-    </div>
+    <AuthProvider>
+      <Routes>
+        {/* Login route outside the main layout */}
+        <Route path="/login" element={<Login />} />
+        
+        {/* All other routes with Sidebar and Header */}
+        <Route path="/*" element={
+          <div className="flex h-screen bg-gray-50">
+            <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <Header />
+              <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-4">
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/advanced-search" element={<AdvancedSearch />} />
+                  <Route path="/funding-details" element={<FundingDetails />} />
+                  <Route path="/company-profile" element={<CompanyProfile />} />
+                </Routes>
+              </main>
+            </div>
+          </div>
+        } />
+      </Routes>
+    </AuthProvider>
   );
 }
 

@@ -7,22 +7,23 @@ import cors from "cors";
 import morgan from "morgan";
 import fundingRoutes from "./routes/fundingRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorHandler.js";
+import authRoutes from "./routes/authRoutes.js";
 
-// Initialize Express App
-const app = express();
-const PORT = process.env.PORT || 5000;
+const app = express(); // ✅ Define app before using it
+const PORT = process.env.PORT || 5000; // ✅ Define PORT before using it
 
 // Middleware
 app.use(express.json());
 app.use(cors({
     origin: '*', // Allow all origins (for development only)
-  }));
+}));
 app.use(morgan("dev")); // Logging requests
 
 // Database Connection
 connectDB();
 
 // Routes
+app.use("/api/auth", authRoutes);
 app.use("/api/fundings", fundingRoutes);
 
 // Error Handling Middleware
