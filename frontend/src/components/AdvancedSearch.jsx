@@ -1,5 +1,7 @@
 // src/pages/AdvancedSearch.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import AuthContext from '../context/AuthContext';
 import { 
   MagnifyingGlassIcon, 
   AdjustmentsHorizontalIcon, 
@@ -8,9 +10,19 @@ import {
   XMarkIcon,
   ChevronDownIcon
 } from '@heroicons/react/24/outline';
-import axios from 'axios'; // Make sure axios is installed
+import axios from 'axios';
 
 function AdvancedSearch() {
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // If user is admin, redirect to admin advanced search
+    if (user && user.role === 'admin') {
+      navigate('/admin/advanced-search');
+    }
+  }, [user, navigate]);
+
   const [activeTab, setActiveTab] = useState('companies');
   const [selectedFilters, setSelectedFilters] = useState([
     { id: 1, category: 'Property Type', value: 'Residential' },
@@ -297,7 +309,7 @@ function AdvancedSearch() {
               {expandedCategories.funding && (
                 <div className="ml-2 space-y-2">
                   <div className="flex items-center">
-                    <input id="range" type="checkbox" className="h-4 w-4 text-blue-600" checked />
+                    <input id="range" type="checkbox" className="h-4 w-4 text-blue-600" defaultChecked />
                     <label htmlFor="range" className="ml-2 text-sm text-gray-700">Funding Range</label>
                   </div>
                   <div className="flex items-center">
@@ -343,7 +355,7 @@ function AdvancedSearch() {
               {expandedCategories.propType && (
                 <div className="ml-2 space-y-2">
                   <div className="flex items-center">
-                    <input id="residential" type="checkbox" className="h-4 w-4 text-blue-600" checked />
+                    <input id="residential" type="checkbox" className="h-4 w-4 text-blue-600" defaultChecked />
                     <label htmlFor="residential" className="ml-2 text-sm text-gray-700">Residential</label>
                   </div>
                   <div className="flex items-center">
@@ -527,7 +539,6 @@ function AdvancedSearch() {
                     <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
                       <button className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                         <span className="sr-only">Previous</span>
-                        {/* Pagination icon would go here */}
                         &laquo;
                       </button>
                       <button aria-current="page" className="z-10 bg-blue-50 border-blue-500 text-blue-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
@@ -535,7 +546,6 @@ function AdvancedSearch() {
                       </button>
                       <button className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                         <span className="sr-only">Next</span>
-                        {/* Pagination icon would go here */}
                         &raquo;
                       </button>
                     </nav>

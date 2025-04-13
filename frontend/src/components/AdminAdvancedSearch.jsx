@@ -12,14 +12,15 @@ function AdminAdvancedSearch() {
   const [editingRow, setEditingRow] = useState(null);
   const [rowData, setRowData] = useState({});
   const [error, setError] = useState(null);
-  console.log('User:', user); // Debugging line
   
   useEffect(() => {
-    if (!user || user.role !== 'admin') {
-      // redirect or show error if not admin
-      navigate('/advancedsearch');
+    // Check if user exists and is an admin
+    if (user.role !== 'admin') {
+      // User is logged in but not an admin
+      navigate('/advanced-search');
       return;
     }
+    
     // Fetch data from API 
     const fetchData = async () => {
       try {

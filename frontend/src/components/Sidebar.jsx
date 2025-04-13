@@ -19,7 +19,9 @@ function Sidebar({ currentPage, setCurrentPage }) {
 
   const navigationItems = [
     { id: 'dashboard', path: '/', icon: <HomeIcon className="h-6 w-6" />, label: 'Dashboard' },
-    { id: 'advancedSearch', path: '/advanced-search', icon: <MagnifyingGlassIcon className="h-6 w-6" />, label: 'Advanced Search' },
+    ...((!user || user.role !== 'admin') ? [
+      { id: 'advancedSearch', path: '/advanced-search', icon: <MagnifyingGlassIcon className="h-6 w-6" />, label: 'Advanced Search' }
+    ] : []),
     { id: 'fundingDetails', path: '/funding-details', icon: <CurrencyDollarIcon className="h-6 w-6" />, label: 'Funding Details' },
     { id: 'companyProfile', path: '/company-profile', icon: <BuildingOfficeIcon className="h-6 w-6" />, label: 'Companies' },
   ];
