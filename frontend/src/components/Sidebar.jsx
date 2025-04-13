@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   HomeIcon, 
@@ -11,9 +11,11 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon
 } from '@heroicons/react/24/outline';
+import AuthContext from '../context/AuthContext';
 
 function Sidebar({ currentPage, setCurrentPage }) {
   const [expanded, setExpanded] = useState(true);
+  const { user } = useContext(AuthContext);
 
   const navigationItems = [
     { id: 'dashboard', path: '/', icon: <HomeIcon className="h-6 w-6" />, label: 'Dashboard' },
@@ -60,6 +62,22 @@ function Sidebar({ currentPage, setCurrentPage }) {
               </Link>
             </li>
           ))}
+          {/* Admin-only navigation item */}
+          {user && user.role === 'admin' && (
+            <li 
+              className={`
+                px-4 py-3 flex items-center cursor-pointer
+                transition-colors duration-200
+                ${currentPage === 'admin-advanced-search' ? 'bg-blue-600' : 'hover:bg-slate-700'}
+              `}
+              onClick={() => setCurrentPage('admin-advanced-search')}
+            >
+              <Link to="/admin-advanced-search" className="flex items-center w-full">
+                <UserGroupIcon className="h-6 w-6" />
+                {expanded && <span className="ml-3">Admin Search</span>}
+              </Link>
+            </li>
+          )}
         </ul>
       </nav>
 
