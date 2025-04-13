@@ -5,6 +5,7 @@ import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
 import AdvancedSearch from './components/AdvancedSearch';
+import AdminAdvancedSearch from './components/AdminAdvancedSearch';
 import FundingDetails from './components/FundingDetails.jsx';
 import CompanyProfile from './components/CompanyProfile';
 import Login from './pages/Login.jsx';
@@ -28,6 +29,7 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/advanced-search" element={<AdvancedSearch />} />
+                  <Route path="/admin-advanced-search" element={<AdminAdvancedSearch />} />
                   <Route path="/funding-details" element={<FundingDetails />} />
                   <Route path="/company-profile" element={<CompanyProfile />} />
                 </Routes>
