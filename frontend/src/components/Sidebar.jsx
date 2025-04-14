@@ -82,20 +82,21 @@ function Sidebar({ currentPage, setCurrentPage }) {
           )}
         </ul>
       </nav>
-
-      {/* Footer with Settings and Logout */}
-      <div className="mt-auto w-full border-t border-slate-700">
-        <ul>
-          <li className="px-4 py-3 flex items-center cursor-pointer hover:bg-slate-700 w-full">
-            <Cog6ToothIcon className="h-6 w-6" />
-            {expanded && <span className="ml-3">Settings</span>}
-          </li>
-          <li className="px-4 py-3 flex items-center cursor-pointer hover:bg-slate-700 w-full">
-            <ArrowLeftOnRectangleIcon className="h-6 w-6" />
-            {expanded && <span className="ml-3">Logout</span>}
-          </li>
-        </ul>
-      </div>
+      
+      {user && user.role === 'admin' && (
+        <div className="mt-auto w-full border-t border-slate-700">
+          <ul>
+            <li className="px-4 py-3 flex items-center cursor-pointer hover:bg-slate-700 w-full">
+              <Cog6ToothIcon className="h-6 w-6" />
+              {expanded && <span className="ml-3">Settings</span>}
+            </li>
+            <li className="px-4 py-3 flex items-center cursor-pointer hover:bg-slate-700 w-full">
+              <ArrowLeftOnRectangleIcon className="h-6 w-6" />
+              {expanded && <span className="ml-3">Logout</span>}
+            </li>
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
