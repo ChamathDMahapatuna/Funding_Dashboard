@@ -44,7 +44,9 @@ function Header() {
             <div className="ml-2 hidden md:block">
               {user ? (
                 <>
-                  <div className="text-sm font-medium text-gray-700">{user.username || "User"}</div>
+                  <div className="text-sm font-medium text-gray-700">
+                    {user.email ? (user.email.includes('@') ? user.email.split('@')[0] : user.email) : "User"}
+                  </div>
                   <div className="text-xs text-gray-500">{user.role || "Guest"}</div>
                 </>
               ) : (
@@ -58,27 +60,7 @@ function Header() {
         </div>
       </div>
       
-      <div className="mt-4 flex justify-end">
-        <nav className="flex space-x-4">
-          <Link to="/" className="hover:underline">Home</Link>
-          
-          {/* Only show Advanced Search link for non-admin users */}
-          {(!user || user.role !== 'admin') && (
-            <Link to="/advanced-search" className="hover:underline">Advanced Search</Link>
-          )}
-          
-          {user && user.role === 'admin' ? (
-            <>
-              <Link to="/admin/advanced-search" className="hover:underline">Admin Dashboard</Link>
-              <button onClick={logout} className="hover:underline">Logout</button>
-            </>
-          ) : (
-            <Link to="/login" className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-              Admin Login
-            </Link>
-          )}
-        </nav>
-      </div>
+    
     </header>
   );
 }
