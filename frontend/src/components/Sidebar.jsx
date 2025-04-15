@@ -15,9 +15,7 @@ import AuthContext from '../context/AuthContext';
 
 function Sidebar({ currentPage, setCurrentPage }) {
   const [expanded, setExpanded] = useState(true);
-  const { user } = useContext(AuthContext);
-  const { users, logout } = useContext(AuthContext);
-
+  const { user, logout } = useContext(AuthContext);
 
   const navigationItems = [
     { id: 'dashboard', path: '/', icon: <HomeIcon className="h-6 w-6" />, label: 'Dashboard' },
@@ -85,7 +83,7 @@ function Sidebar({ currentPage, setCurrentPage }) {
         </ul>
       </nav>
       
-      {user && user.role === 'admin' && (
+      {user && user.role === 'admin' ? (
         <div className="mt-auto w-full border-t border-slate-700">
           <ul>
             <li className="px-4 py-3 flex items-center cursor-pointer hover:bg-slate-700 w-full">
@@ -98,6 +96,17 @@ function Sidebar({ currentPage, setCurrentPage }) {
             >
               <ArrowLeftOnRectangleIcon className="h-6 w-6" />
               {expanded && <span className="ml-3">Logout</span>}
+            </li>
+          </ul>
+        </div>
+      ) : (
+        <div className="mt-auto w-full border-t border-slate-700">
+          <ul>
+            <li className="px-4 py-3 flex items-center cursor-pointer hover:bg-slate-700 w-full">
+              <Link to="/login" className="flex items-center w-full">
+                <ArrowLeftOnRectangleIcon className="h-6 w-6" />
+                {expanded && <span className="ml-3">Admin Login</span>}
+              </Link>
             </li>
           </ul>
         </div>
