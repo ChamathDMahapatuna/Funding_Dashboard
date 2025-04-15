@@ -16,6 +16,8 @@ import AuthContext from '../context/AuthContext';
 function Sidebar({ currentPage, setCurrentPage }) {
   const [expanded, setExpanded] = useState(true);
   const { user } = useContext(AuthContext);
+  const { users, logout } = useContext(AuthContext);
+
 
   const navigationItems = [
     { id: 'dashboard', path: '/', icon: <HomeIcon className="h-6 w-6" />, label: 'Dashboard' },
@@ -90,7 +92,10 @@ function Sidebar({ currentPage, setCurrentPage }) {
               <Cog6ToothIcon className="h-6 w-6" />
               {expanded && <span className="ml-3">Settings</span>}
             </li>
-            <li className="px-4 py-3 flex items-center cursor-pointer hover:bg-slate-700 w-full">
+            <li 
+              className="px-4 py-3 flex items-center cursor-pointer hover:bg-slate-700 w-full"
+              onClick={logout}
+            >
               <ArrowLeftOnRectangleIcon className="h-6 w-6" />
               {expanded && <span className="ml-3">Logout</span>}
             </li>
