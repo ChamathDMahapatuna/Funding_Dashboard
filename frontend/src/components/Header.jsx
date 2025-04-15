@@ -45,7 +45,7 @@ function Header() {
               {user ? (
                 <>
                   <div className="text-sm font-medium text-gray-700">
-                    {user.username ? (user.username.includes('@') ? user.username.split('@')[0] : user.username) : "User"}
+                    {user.email ? (user.email.includes('@') ? user.email.split('@')[0] : user.email) : "User"}
                   </div>
                   <div className="text-xs text-gray-500">{user.role || "Guest"}</div>
                 </>
