@@ -72,6 +72,24 @@ function AdminAdvancedSearch() {
     }
   };
 
+  const deleteRow = async (id) => {
+    if (window.confirm('Are you sure you want to delete this record? This action cannot be undone.')) {
+      try {
+        // Send DELETE request to the API
+        await axios.delete(`http://localhost:5000/api/fundings/${id}`);
+        
+        // Update local state by removing the deleted record
+        setSearchResults(prev => prev.filter(item => item.id !== id));
+        
+        // Reset editing state
+        setEditingRow(null);
+      } catch (err) {
+        console.error('Error deleting record:', err);
+        setError('Error deleting record. Please try again.');
+      }
+    }
+  };
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -185,20 +203,29 @@ function AdminAdvancedSearch() {
                   </td>
                   <td className="px-4 py-2">
                     {editingRow === row.id ? (
-                      <>
+                      <div className="flex space-x-1">
                         <button
                           onClick={() => saveRow(row.id)}
-                          className="bg-green-500 text-white px-2 py-1 rounded mr-2"
+                          className="bg-green-500 text-white px-2 py-1 rounded"
+                          title="Save changes"
                         >
                           Save
                         </button>
                         <button
+                          onClick={() => deleteRow(row.id)}
+                          className="bg-red-600 text-white px-2 py-1 rounded"
+                          title="Delete record"
+                        >
+                          Delete
+                        </button>
+                        <button
                           onClick={() => setEditingRow(null)}
-                          className="bg-red-500 text-white px-2 py-1 rounded"
+                          className="bg-gray-500 text-white px-2 py-1 rounded"
+                          title="Cancel changes"
                         >
                           Cancel
                         </button>
-                      </>
+                      </div>
                     ) : (
                       <button
                         onClick={() => handleEdit(row)}
