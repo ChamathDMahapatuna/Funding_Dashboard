@@ -40,7 +40,6 @@ function AdminAdvancedSearch() {
         const displayData = {
           id: item._id,
           name: item.Name || 'N/A',
-          technology: item.Technology || 'N/A',
           propType: item['Prop Type'] || 'N/A',
           funding: item['Total Funding'] || 'N/A',
           valuation: item['Latest Valuation'] || 'N/A',
@@ -82,7 +81,6 @@ function AdminAdvancedSearch() {
       // Extract only the fields we changed in the quick edit
       const updatedFields = {
         Name: rowData.name,
-        Technology: rowData.technology,
         'Prop Type': rowData.propType,
         'Total Funding': rowData.funding,
         'Latest Valuation': rowData.valuation,
@@ -154,7 +152,6 @@ function AdminAdvancedSearch() {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-4 py-2 text-left">Company Name</th>
-                <th className="px-4 py-2 text-left">Technology</th>
                 <th className="px-4 py-2 text-left">Property Type</th>
                 <th className="px-4 py-2 text-left">Total Funding</th>
                 <th className="px-4 py-2 text-left">Valuation</th>
@@ -176,17 +173,6 @@ function AdminAdvancedSearch() {
                       />
                     ) : (
                       row.name
-                    )}
-                  </td>
-                  <td className="px-4 py-2">
-                    {editingRow === row.id ? (
-                      <input
-                        value={rowData.technology}
-                        onChange={(e) => handleChange(e, 'technology')}
-                        className="border rounded px-2 py-1 w-full"
-                      />
-                    ) : (
-                      row.technology
                     )}
                   </td>
                   <td className="px-4 py-2">
