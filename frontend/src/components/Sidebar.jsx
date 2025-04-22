@@ -87,8 +87,10 @@ function Sidebar({ currentPage, setCurrentPage }) {
         <div className="mt-auto w-full border-t border-slate-700">
           <ul>
             <li className="px-4 py-3 flex items-center cursor-pointer hover:bg-slate-700 w-full">
-              <Cog6ToothIcon className="h-6 w-6" />
-              {expanded && <span className="ml-3">Settings</span>}
+              <Link to="/admin-registration" className="flex items-center w-full">
+                <Cog6ToothIcon className="h-6 w-6" />
+                {expanded && <span className="ml-3">Add new admin</span>}
+              </Link>
             </li>
             <li 
               className="px-4 py-3 flex items-center cursor-pointer hover:bg-slate-700 w-full"
