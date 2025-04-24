@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { 
   ArrowUpIcon, 
@@ -24,6 +24,7 @@ import {
   Line 
 } from 'recharts';
 import axios from 'axios'; // Make sure to install axios: npm install axios
+import * as XLSX from 'xlsx'; // Import xlsx package - install with: npm install xlsx
 
 function Dashboard() {
   const [companies, setCompanies] = useState([]);
@@ -36,6 +37,9 @@ function Dashboard() {
   const [error, setError] = useState(null);
 
   const API_URL = 'http://localhost:5000/api/fundings'; // Adjust based on your API setup
+
+  // Add navigate hook for redirection
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -243,6 +247,53 @@ function Dashboard() {
     setTopFundedCompanies(processedTopFundedCompanies);
   };
 
+  // Function to export data to Excel
+  const exportToExcel = () => {
+    // Create workbook and worksheet
+    const workbook = XLSX.utils.book_new();
+    
+    // Export Summary Stats
+    const statsData = stats.map(stat => ({
+      Metric: stat.title,
+      Value: stat.value,
+      Change: stat.change
+    }));
+    const statsSheet = XLSX.utils.json_to_sheet(statsData);
+    XLSX.utils.book_append_sheet(workbook, statsSheet, "Summary Stats");
+    
+    // Export Companies Data
+    const companiesSheet = XLSX.utils.json_to_sheet(companies);
+    XLSX.utils.book_append_sheet(workbook, companiesSheet, "Companies");
+    
+    // Export Funding by Year Data
+    const fundingByYearSheet = XLSX.utils.json_to_sheet(fundingByYearData);
+    XLSX.utils.book_append_sheet(workbook, fundingByYearSheet, "Funding By Year");
+    
+    // Export Property Type Data
+    const propTypeSheet = XLSX.utils.json_to_sheet(propTypeData);
+    XLSX.utils.book_append_sheet(workbook, propTypeSheet, "Property Types");
+    
+    // Export Valuation Trend Data
+    const valuationTrendSheet = XLSX.utils.json_to_sheet(valuationTrendData);
+    XLSX.utils.book_append_sheet(workbook, valuationTrendSheet, "Valuation Trends");
+    
+    // Export Top Funded Companies
+    const topFundedSheet = XLSX.utils.json_to_sheet(topFundedCompanies);
+    XLSX.utils.book_append_sheet(workbook, topFundedSheet, "Top Funded Companies");
+    
+    // Generate file name with current date
+    const date = new Date();
+    const fileName = `PropTech_Funding_Dashboard_${date.toISOString().split('T')[0]}.xlsx`;
+    
+    // Write and download file
+    XLSX.writeFile(workbook, fileName);
+  };
+
+  // Function to handle navigation to Company Profile
+  const navigateToCompanyProfile = () => {
+    navigate('/company-profile'); // Use the correct route that points to CompanyProfile
+  };
+
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
   return (
@@ -256,7 +307,10 @@ function Dashboard() {
             <option>Last Year</option>
             <option>YTD</option>
           </select>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <button 
+            className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onClick={exportToExcel}
+          >
             Export Data
           </button>
         </div>
@@ -441,7 +495,12 @@ function Dashboard() {
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-semibold">Company Data</h2>
-          <button className="text-blue-600 hover:text-blue-800 text-sm">View All</button>
+          <button 
+            className="text-blue-600 hover:text-blue-800 text-sm"
+            onClick={navigateToCompanyProfile}
+          >
+            View All
+          </button>
         </div>
         
         {isLoading ? (
