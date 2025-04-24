@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { 
   ArrowUpIcon, 
@@ -37,6 +37,9 @@ function Dashboard() {
   const [error, setError] = useState(null);
 
   const API_URL = 'http://localhost:5000/api/fundings'; // Adjust based on your API setup
+
+  // Add navigate hook for redirection
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -286,6 +289,11 @@ function Dashboard() {
     XLSX.writeFile(workbook, fileName);
   };
 
+  // Function to handle navigation to Company Profile
+  const navigateToCompanyProfile = () => {
+    navigate('/companies'); // Assuming the route for CompanyProfile is '/companies'
+  };
+
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
   return (
@@ -487,7 +495,12 @@ function Dashboard() {
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-semibold">Company Data</h2>
-          <button className="text-blue-600 hover:text-blue-800 text-sm">View All</button>
+          <button 
+            className="text-blue-600 hover:text-blue-800 text-sm"
+            onClick={navigateToCompanyProfile}
+          >
+            View All
+          </button>
         </div>
         
         {isLoading ? (
