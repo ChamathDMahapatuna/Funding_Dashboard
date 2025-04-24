@@ -291,7 +291,7 @@ function Dashboard() {
 
   // Function to handle navigation to Company Profile
   const navigateToCompanyProfile = () => {
-    navigate('/companies'); // Assuming the route for CompanyProfile is '/companies'
+    navigate('/companies-profile'); // Use the correct route that points to CompanyProfile
   };
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
