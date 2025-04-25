@@ -1,7 +1,6 @@
 // src/components/Header.jsx
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { 
-  MagnifyingGlassIcon, 
   BellIcon, 
   QuestionMarkCircleIcon, 
   UserCircleIcon 
@@ -10,24 +9,12 @@ import { Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 
 function Header() {
-  const [searchQuery, setSearchQuery] = useState('');
   const { user, logout } = useContext(AuthContext);
 
   return (
     <header className="bg-white shadow-sm py-4 px-6">
       <div className="flex items-center justify-between">
-        <div className="relative w-96">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
-          </div>
-          <input
-            type="text"
-            placeholder="Search for companies, investors, or deals..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          />
-        </div>
+        <div className="flex-1"></div> {/* Empty div to maintain layout */}
         
         <div className="flex items-center space-x-4">
           <div className="relative">
