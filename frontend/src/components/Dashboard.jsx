@@ -300,13 +300,7 @@ function Dashboard() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold text-gray-800">PropTech Funding Dashboard</h1>
-        <div className="flex items-center space-x-3">
-          <select className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <option>All Time</option>
-            <option>Last 5 Years</option>
-            <option>Last Year</option>
-            <option>YTD</option>
-          </select>
+        <div>
           <button 
             className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onClick={exportToExcel}
