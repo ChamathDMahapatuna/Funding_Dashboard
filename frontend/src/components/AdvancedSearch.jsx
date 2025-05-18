@@ -31,40 +31,26 @@ function AdvancedSearch() {
   const [searchQuery, setSearchQuery] = useState('');
   
   const [expandedCategories, setExpandedCategories] = useState({
-    company: true,
-    funding: true,
-    location: false,
     propType: false,
     valuation: false,
-    founded: false,
     totalFunding: false,
     yearRange: false,
-    fundingRounds: false,
-    valuationRank: false,
-    numberOfFounders: false,
   });
 
   const [checkboxStates, setCheckboxStates] = useState({
-    technology: false,
-    name: false,
+    all: false,
     residential: false,
     commercial: false,
-    construction: false,
+    other: false,
     valuationRange: false,
     totalFunding: false,
     yearRange: false,
-    fundingRounds: false,
-    valuationRank: false,
-    numberOfFounders: false,
   });
 
   const [rangeValues, setRangeValues] = useState({
     valuationRange: [0, 100],
     totalFunding: [0, 100],
     yearRange: [2000, 2023],
-    fundingRounds: [1, 10],
-    valuationRank: [1, 100],
-    numberOfFounders: [1, 10],
   });
 
   const handleCheckboxChange = (checkboxId) => {
@@ -161,6 +147,13 @@ function AdvancedSearch() {
         id: filterId++,
         category: 'Property Type',
         value: 'Commercial'
+      });
+    }
+    if (checkboxStates.other) {
+      newFilters.push({
+        id: filterId++,
+        category: 'Property Type',
+        value: 'Other'
       });
     }
     setSelectedFilters(newFilters);
@@ -322,75 +315,6 @@ function AdvancedSearch() {
           <div className="bg-white rounded-lg shadow p-4">
             <div className="text-lg font-medium text-gray-800 mb-4">Filters</div>
             
-            {/* Company Info Filter */}
-            <div className="mb-4">
-              <button
-                onClick={() => toggleCategory('company')}
-                className="flex items-center justify-between w-full mb-2 text-sm font-medium text-gray-700"
-              >
-                <span>Company Info</span>
-                <ChevronDownIcon className={`h-4 w-4 transform ${expandedCategories.company ? 'rotate-180' : ''}`} />
-              </button>
-              {expandedCategories.company && (
-                <div className="ml-2 space-y-2">
-                  <div className="flex items-center">
-                    <input id="technology" type="checkbox" className="h-4 w-4 text-blue-600" />
-                    <label htmlFor="technology" className="ml-2 text-sm text-gray-700">Technology</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input id="name" type="checkbox" className="h-4 w-4 text-blue-600" />
-                    <label htmlFor="name" className="ml-2 text-sm text-gray-700">Company Name</label>
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            {/* Funding Filter */}
-            <div className="mb-4">
-              <button
-                onClick={() => toggleCategory('funding')}
-                className="flex items-center justify-between w-full mb-2 text-sm font-medium text-gray-700"
-              >
-                <span>Funding</span>
-                <ChevronDownIcon className={`h-4 w-4 transform ${expandedCategories.funding ? 'rotate-180' : ''}`} />
-              </button>
-              {expandedCategories.funding && (
-                <div className="ml-2 space-y-2">
-                  <div className="flex items-center">
-                    <input id="range" type="checkbox" className="h-4 w-4 text-blue-600" defaultChecked />
-                    <label htmlFor="range" className="ml-2 text-sm text-gray-700">Funding Range</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input id="rounds" type="checkbox" className="h-4 w-4 text-blue-600" />
-                    <label htmlFor="rounds" className="ml-2 text-sm text-gray-700">Funding Rounds</label>
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            {/* Location Filter */}
-            <div className="mb-4">
-              <button
-                onClick={() => toggleCategory('location')}
-                className="flex items-center justify-between w-full mb-2 text-sm font-medium text-gray-700"
-              >
-                <span>Location</span>
-                <ChevronDownIcon className={`h-4 w-4 transform ${expandedCategories.location ? 'rotate-180' : ''}`} />
-              </button>
-              {expandedCategories.location && (
-                <div className="ml-2 space-y-2">
-                  <div className="flex items-center">
-                    <input id="state" type="checkbox" className="h-4 w-4 text-blue-600" />
-                    <label htmlFor="state" className="ml-2 text-sm text-gray-700">State</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input id="city" type="checkbox" className="h-4 w-4 text-blue-600" />
-                    <label htmlFor="city" className="ml-2 text-sm text-gray-700">City</label>
-                  </div>
-                </div>
-              )}
-            </div>
-
             {/* Property Type Filter */}
             <div className="mb-4">
               <button
@@ -403,12 +327,20 @@ function AdvancedSearch() {
               {expandedCategories.propType && (
                 <div className="ml-2 space-y-2">
                   <div className="flex items-center">
+                    <input id="all" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.all} onChange={() => handleCheckboxChange('all')} />
+                    <label htmlFor="all" className="ml-2 text-sm text-gray-700">All</label>
+                  </div>
+                  <div className="flex items-center">
                     <input id="residential" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.residential} onChange={() => handleCheckboxChange('residential')} />
                     <label htmlFor="residential" className="ml-2 text-sm text-gray-700">Residential</label>
                   </div>
                   <div className="flex items-center">
                     <input id="commercial" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.commercial} onChange={() => handleCheckboxChange('commercial')} />
                     <label htmlFor="commercial" className="ml-2 text-sm text-gray-700">Commercial</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input id="other" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.other} onChange={() => handleCheckboxChange('other')} />
+                    <label htmlFor="other" className="ml-2 text-sm text-gray-700">Other</label>
                   </div>
                 </div>
               )}
@@ -491,84 +423,6 @@ function AdvancedSearch() {
                 </div>
               )}
             </div>
-
-            {/* Number of Funding Rounds Filter */}
-            <div className="mb-4">
-              <button
-                onClick={() => toggleCategory('fundingRounds')}
-                className="flex items-center justify-between w-full mb-2 text-sm font-medium text-gray-700"
-              >
-                <span>Number of Funding Rounds</span>
-                <ChevronDownIcon className={`h-4 w-4 transform ${expandedCategories.fundingRounds ? 'rotate-180' : ''}`} />
-              </button>
-              {expandedCategories.fundingRounds && (
-                <div className="ml-2 space-y-2">
-                  <div className="flex items-center">
-                    <input id="fundingRounds" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.fundingRounds} onChange={() => handleCheckboxChange('fundingRounds')} />
-                    <label htmlFor="fundingRounds" className="ml-2 text-sm text-gray-700">Funding Rounds</label>
-                  </div>
-                  {checkboxStates.fundingRounds && (
-                    <div className="mt-2">
-                      <input type="range" min="1" max="10" value={rangeValues.fundingRounds[0]} onChange={(e) => handleRangeChange('fundingRounds', [e.target.value, rangeValues.fundingRounds[1]])} />
-                      <input type="range" min="1" max="10" value={rangeValues.fundingRounds[1]} onChange={(e) => handleRangeChange('fundingRounds', [rangeValues.fundingRounds[0], e.target.value])} />
-                      <div>Range: {rangeValues.fundingRounds[0]} - {rangeValues.fundingRounds[1]}</div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Valuation Rank Filter */}
-            <div className="mb-4">
-              <button
-                onClick={() => toggleCategory('valuationRank')}
-                className="flex items-center justify-between w-full mb-2 text-sm font-medium text-gray-700"
-              >
-                <span>Valuation Rank</span>
-                <ChevronDownIcon className={`h-4 w-4 transform ${expandedCategories.valuationRank ? 'rotate-180' : ''}`} />
-              </button>
-              {expandedCategories.valuationRank && (
-                <div className="ml-2 space-y-2">
-                  <div className="flex items-center">
-                    <input id="valuationRank" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.valuationRank} onChange={() => handleCheckboxChange('valuationRank')} />
-                    <label htmlFor="valuationRank" className="ml-2 text-sm text-gray-700">Valuation Rank</label>
-                  </div>
-                  {checkboxStates.valuationRank && (
-                    <div className="mt-2">
-                      <input type="range" min="1" max="100" value={rangeValues.valuationRank[0]} onChange={(e) => handleRangeChange('valuationRank', [e.target.value, rangeValues.valuationRank[1]])} />
-                      <input type="range" min="1" max="100" value={rangeValues.valuationRank[1]} onChange={(e) => handleRangeChange('valuationRank', [rangeValues.valuationRank[0], e.target.value])} />
-                      <div>Range: {rangeValues.valuationRank[0]} - {rangeValues.valuationRank[1]}</div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Number of Founders Filter */}
-            <div className="mb-4">
-              <button
-                onClick={() => toggleCategory('numberOfFounders')}
-                className="flex items-center justify-between w-full mb-2 text-sm font-medium text-gray-700"
-              >
-                <span>Number of Founders</span>
-                <ChevronDownIcon className={`h-4 w-4 transform ${expandedCategories.numberOfFounders ? 'rotate-180' : ''}`} />
-              </button>
-              {expandedCategories.numberOfFounders && (
-                <div className="ml-2 space-y-2">
-                  <div className="flex items-center">
-                    <input id="numberOfFounders" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.numberOfFounders} onChange={() => handleCheckboxChange('numberOfFounders')} />
-                    <label htmlFor="numberOfFounders" className="ml-2 text-sm text-gray-700">Founders</label>
-                  </div>
-                  {checkboxStates.numberOfFounders && (
-                    <div className="mt-2">
-                      <input type="range" min="1" max="10" value={rangeValues.numberOfFounders[0]} onChange={(e) => handleRangeChange('numberOfFounders', [e.target.value, rangeValues.numberOfFounders[1]])} />
-                      <input type="range" min="1" max="10" value={rangeValues.numberOfFounders[1]} onChange={(e) => handleRangeChange('numberOfFounders', [rangeValues.numberOfFounders[0], e.target.value])} />
-                      <div>Range: {rangeValues.numberOfFounders[0]} - {rangeValues.numberOfFounders[1]}</div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
             
             <button 
               onClick={applyFilters}
@@ -610,61 +464,63 @@ function AdvancedSearch() {
             
             {/* Results Table */}
             <div className="overflow-x-auto">
-              <div className="overflow-x-scroll">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Company Name
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Property Type
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Total Funding
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Valuation
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Founded
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Rounds
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Location
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredResults.map((company) => (
-                      <tr key={company.id} className="hover:bg-gray-50 cursor-pointer">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-blue-600">{company.name}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{company.propType}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{company.funding}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{company.valuation}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{company.founded}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{company.rounds}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{company.location}</div>
-                        </td>
+              <div className="overflow-x-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+                <div className="overflow-x-scroll">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Company Name
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Property Type
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Total Funding
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Valuation
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Founded
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Rounds
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Location
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {filteredResults.map((company) => (
+                        <tr key={company.id} className="hover:bg-gray-50 cursor-pointer">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm font-medium text-blue-600">{company.name}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">{company.propType}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">{company.funding}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">{company.valuation}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">{company.founded}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">{company.rounds}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">{company.location}</div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
             
