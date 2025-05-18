@@ -82,6 +82,7 @@ function AdvancedSearch() {
     setSelectedFilters(selectedFilters.filter(filter => filter.id !== filterId));
   };
 
+
   // Handle search input change
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -99,6 +100,18 @@ function AdvancedSearch() {
       item.propType.toLowerCase().includes(searchLower)
     );
   });
+  
+  const handleSelect = (category, value) => {
+    const filterExists = selectedFilters.some(f => f.category === category && f.value === value);
+    if (!filterExists) {
+      const updatedFilters = [...selectedFilters, { category, value }];
+      console.log("Selected Filters:", updatedFilters); // Debug log
+      setSelectedFilters(updatedFilters);
+    }
+  };
+
+  <button onClick={() => handleSelect('Property Type', 'Residential')}>Residential</button>
+
 
   // Handle filter application
   const applyFilters = () => {
