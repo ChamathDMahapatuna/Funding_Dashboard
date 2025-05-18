@@ -100,21 +100,48 @@ function AdvancedSearch() {
       item.propType.toLowerCase().includes(searchLower)
     );
   });
-  
-  const handleSelect = (category, value) => {
-    const filterExists = selectedFilters.some(f => f.category === category && f.value === value);
-    if (!filterExists) {
-      const updatedFilters = [...selectedFilters, { category, value }];
-      console.log("Selected Filters:", updatedFilters); // Debug log
-      setSelectedFilters(updatedFilters);
-    }
-  };
 
-  <button onClick={() => handleSelect('Property Type', 'Residential')}>Residential</button>
+  //____________________
+  const [checkboxStates, setCheckboxStates] = useState({
+    technology: false,
+    name: false,
+    residential: true,  // matches your defaultChecked
+    commercial: false,
+    construction: false,
+    // ... add other checkboxes
+  });
+  // Add handler for checkbox changes
+const handleCheckboxChange = (checkboxId) => {
+  setCheckboxStates(prev => ({
+    ...prev,
+    [checkboxId]: !prev[checkboxId]
+  }));
+};
+
 
 
   // Handle filter application
   const applyFilters = () => {
+
+    const newFilters = [];
+    let filterId = 1;
+
+    // Add Property Type filters
+    if (checkboxStates.residential) {
+      newFilters.push({
+        id: filterId++,
+        category: 'Property Type',
+        value: 'Residential'
+      });
+    }
+    if (checkboxStates.commercial) {
+      newFilters.push({
+        id: filterId++,
+        category: 'Property Type',
+        value: 'Commercial'
+      });
+    }
+    setSelectedFilters(newFilters);
     // You can implement more complex filtering logic here based on selectedFilters
     console.log('Applying filters:', selectedFilters);
     
@@ -368,7 +395,7 @@ function AdvancedSearch() {
               {expandedCategories.propType && (
                 <div className="ml-2 space-y-2">
                   <div className="flex items-center">
-                    <input id="residential" type="checkbox" className="h-4 w-4 text-blue-600" defaultChecked />
+                    <input id="residential"  type="checkbox" className="h-4 w-4 text-blue-600"checked={checkboxStates.residential} onChange={() => handleCheckboxChange('residential')}/>
                     <label htmlFor="residential" className="ml-2 text-sm text-gray-700">Residential</label>
                   </div>
                   <div className="flex items-center">
