@@ -38,7 +38,10 @@ function AdvancedSearch() {
     valuation: false,
     founded: false,
     totalFunding: false,
-    yearRange: false
+    yearRange: false,
+    fundingRounds: false,
+    valuationRank: false,
+    numberOfFounders: false,
   });
 
   const [checkboxStates, setCheckboxStates] = useState({
@@ -50,12 +53,18 @@ function AdvancedSearch() {
     valuationRange: false,
     totalFunding: false,
     yearRange: false,
+    fundingRounds: false,
+    valuationRank: false,
+    numberOfFounders: false,
   });
 
   const [rangeValues, setRangeValues] = useState({
     valuationRange: [0, 100],
     totalFunding: [0, 100],
     yearRange: [2000, 2023],
+    fundingRounds: [1, 10],
+    valuationRank: [1, 100],
+    numberOfFounders: [1, 10],
   });
 
   const handleCheckboxChange = (checkboxId) => {
@@ -237,9 +246,6 @@ function AdvancedSearch() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold text-gray-800">Advanced Search</h1>
         <div className="flex space-x-3">
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700">
-            Save Search
-          </button>
           <button 
             onClick={clearFilters}
             className="border border-gray-300 bg-white text-gray-700 px-4 py-2 rounded-md text-sm hover:bg-gray-50"
@@ -490,6 +496,84 @@ function AdvancedSearch() {
                       <input type="range" min="2000" max="2023" value={rangeValues.yearRange[0]} onChange={(e) => handleRangeChange('yearRange', [e.target.value, rangeValues.yearRange[1]])} />
                       <input type="range" min="2000" max="2023" value={rangeValues.yearRange[1]} onChange={(e) => handleRangeChange('yearRange', [rangeValues.yearRange[0], e.target.value])} />
                       <div>Range: {rangeValues.yearRange[0]} - {rangeValues.yearRange[1]}</div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Number of Funding Rounds Filter */}
+            <div className="mb-4">
+              <button
+                onClick={() => toggleCategory('fundingRounds')}
+                className="flex items-center justify-between w-full mb-2 text-sm font-medium text-gray-700"
+              >
+                <span>Number of Funding Rounds</span>
+                <ChevronDownIcon className={`h-4 w-4 transform ${expandedCategories.fundingRounds ? 'rotate-180' : ''}`} />
+              </button>
+              {expandedCategories.fundingRounds && (
+                <div className="ml-2 space-y-2">
+                  <div className="flex items-center">
+                    <input id="fundingRounds" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.fundingRounds} onChange={() => handleCheckboxChange('fundingRounds')} />
+                    <label htmlFor="fundingRounds" className="ml-2 text-sm text-gray-700">Funding Rounds</label>
+                  </div>
+                  {checkboxStates.fundingRounds && (
+                    <div className="mt-2">
+                      <input type="range" min="1" max="10" value={rangeValues.fundingRounds[0]} onChange={(e) => handleRangeChange('fundingRounds', [e.target.value, rangeValues.fundingRounds[1]])} />
+                      <input type="range" min="1" max="10" value={rangeValues.fundingRounds[1]} onChange={(e) => handleRangeChange('fundingRounds', [rangeValues.fundingRounds[0], e.target.value])} />
+                      <div>Range: {rangeValues.fundingRounds[0]} - {rangeValues.fundingRounds[1]}</div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Valuation Rank Filter */}
+            <div className="mb-4">
+              <button
+                onClick={() => toggleCategory('valuationRank')}
+                className="flex items-center justify-between w-full mb-2 text-sm font-medium text-gray-700"
+              >
+                <span>Valuation Rank</span>
+                <ChevronDownIcon className={`h-4 w-4 transform ${expandedCategories.valuationRank ? 'rotate-180' : ''}`} />
+              </button>
+              {expandedCategories.valuationRank && (
+                <div className="ml-2 space-y-2">
+                  <div className="flex items-center">
+                    <input id="valuationRank" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.valuationRank} onChange={() => handleCheckboxChange('valuationRank')} />
+                    <label htmlFor="valuationRank" className="ml-2 text-sm text-gray-700">Valuation Rank</label>
+                  </div>
+                  {checkboxStates.valuationRank && (
+                    <div className="mt-2">
+                      <input type="range" min="1" max="100" value={rangeValues.valuationRank[0]} onChange={(e) => handleRangeChange('valuationRank', [e.target.value, rangeValues.valuationRank[1]])} />
+                      <input type="range" min="1" max="100" value={rangeValues.valuationRank[1]} onChange={(e) => handleRangeChange('valuationRank', [rangeValues.valuationRank[0], e.target.value])} />
+                      <div>Range: {rangeValues.valuationRank[0]} - {rangeValues.valuationRank[1]}</div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Number of Founders Filter */}
+            <div className="mb-4">
+              <button
+                onClick={() => toggleCategory('numberOfFounders')}
+                className="flex items-center justify-between w-full mb-2 text-sm font-medium text-gray-700"
+              >
+                <span>Number of Founders</span>
+                <ChevronDownIcon className={`h-4 w-4 transform ${expandedCategories.numberOfFounders ? 'rotate-180' : ''}`} />
+              </button>
+              {expandedCategories.numberOfFounders && (
+                <div className="ml-2 space-y-2">
+                  <div className="flex items-center">
+                    <input id="numberOfFounders" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.numberOfFounders} onChange={() => handleCheckboxChange('numberOfFounders')} />
+                    <label htmlFor="numberOfFounders" className="ml-2 text-sm text-gray-700">Founders</label>
+                  </div>
+                  {checkboxStates.numberOfFounders && (
+                    <div className="mt-2">
+                      <input type="range" min="1" max="10" value={rangeValues.numberOfFounders[0]} onChange={(e) => handleRangeChange('numberOfFounders', [e.target.value, rangeValues.numberOfFounders[1]])} />
+                      <input type="range" min="1" max="10" value={rangeValues.numberOfFounders[1]} onChange={(e) => handleRangeChange('numberOfFounders', [rangeValues.numberOfFounders[0], e.target.value])} />
+                      <div>Range: {rangeValues.numberOfFounders[0]} - {rangeValues.numberOfFounders[1]}</div>
                     </div>
                   )}
                 </div>
