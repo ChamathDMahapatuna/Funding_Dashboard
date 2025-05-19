@@ -53,6 +53,8 @@ function AdvancedSearch() {
     yearRange: [2000, 2023],
   });
 
+  const [selectedCompany, setSelectedCompany] = useState(null);
+
   const handleCheckboxChange = (checkboxId) => {
     setCheckboxStates(prev => ({
       ...prev,
@@ -65,6 +67,14 @@ function AdvancedSearch() {
       ...prev,
       [rangeId]: values
     }));
+  };
+
+  const handleViewDetails = (company) => {
+    setSelectedCompany(company);
+  };
+
+  const closeDetails = () => {
+    setSelectedCompany(null);
   };
 
   // Fetch data from API
@@ -484,13 +494,7 @@ function AdvancedSearch() {
                         Valuation
                       </th>
                       <th scope="col" className="px-4 py-3 text-left font-medium text-gray-600 uppercase tracking-wider">
-                        Founded
-                      </th>
-                      <th scope="col" className="px-4 py-3 text-left font-medium text-gray-600 uppercase tracking-wider">
-                        Rounds
-                      </th>
-                      <th scope="col" className="px-4 py-3 text-left font-medium text-gray-600 uppercase tracking-wider">
-                        Location
+                        Actions
                       </th>
                     </tr>
                   </thead>
@@ -510,13 +514,12 @@ function AdvancedSearch() {
                           <div className="text-sm text-gray-600">{company.valuation}</div>
                         </td>
                         <td className="px-4 py-3 whitespace-normal">
-                          <div className="text-sm text-gray-600">{company.founded}</div>
-                        </td>
-                        <td className="px-4 py-3 whitespace-normal">
-                          <div className="text-sm text-gray-600">{company.rounds}</div>
-                        </td>
-                        <td className="px-4 py-3 whitespace-normal">
-                          <div className="text-sm text-gray-600">{company.location}</div>
+                          <button
+                            onClick={() => handleViewDetails(company)}
+                            className="text-blue-600 hover:text-blue-800 text-sm"
+                          >
+                            View Details
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -524,6 +527,33 @@ function AdvancedSearch() {
                 </table>
               </div>
             </div>
+
+            {/* Company Details Modal */}
+            {selectedCompany && (
+              <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-lg shadow-lg p-6 w-96">
+                  <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                    {selectedCompany.name} - Details
+                  </h2>
+                  <div className="text-sm text-gray-600">
+                    <p><strong>Property Type:</strong> {selectedCompany.propType}</p>
+                    <p><strong>Total Funding:</strong> {selectedCompany.funding}</p>
+                    <p><strong>Valuation:</strong> {selectedCompany.valuation}</p>
+                    <p><strong>Founded:</strong> {selectedCompany.founded}</p>
+                    <p><strong>Funding Rounds:</strong> {selectedCompany.rounds}</p>
+                    <p><strong>Location:</strong> {selectedCompany.location}</p>
+                  </div>
+                  <div className="mt-4 flex justify-end">
+                    <button
+                      onClick={closeDetails}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
             
             {/* Pagination */}
             {!loading && !error && filteredResults.length > 0 && (
