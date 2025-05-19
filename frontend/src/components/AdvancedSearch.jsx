@@ -286,88 +286,117 @@ function AdvancedSearch() {
         <div className="px-6 pb-4">
           <div className="flex flex-wrap gap-4 items-center">
             {/* Property Type Filter */}
-            <div className="flex items-center">
+            <div className="relative">
               <button
                 onClick={() => toggleCategory('propType')}
-                className="text-sm font-medium text-gray-700 flex items-center"
+                className="text-sm font-medium text-gray-700 flex items-center bg-gray-100 px-4 py-2 rounded-md hover:bg-gray-200"
               >
                 Property Type
                 <ChevronDownIcon className={`h-4 w-4 ml-1 transform ${expandedCategories.propType ? 'rotate-180' : ''}`} />
               </button>
               {expandedCategories.propType && (
-                <div className="ml-4 flex gap-2">
-                  <div className="flex items-center">
-                    <input id="all" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.all} onChange={() => handleCheckboxChange('all')} />
-                    <label htmlFor="all" className="ml-2 text-sm text-gray-700">All</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input id="residential" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.residential} onChange={() => handleCheckboxChange('residential')} />
-                    <label htmlFor="residential" className="ml-2 text-sm text-gray-700">Residential</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input id="commercial" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.commercial} onChange={() => handleCheckboxChange('commercial')} />
-                    <label htmlFor="commercial" className="ml-2 text-sm text-gray-700">Commercial</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input id="other" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.other} onChange={() => handleCheckboxChange('other')} />
-                    <label htmlFor="other" className="ml-2 text-sm text-gray-700">Other</label>
+                <div className="absolute z-10 mt-2 bg-white border border-gray-300 rounded-md shadow-lg p-4">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center">
+                      <input id="all" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.all} onChange={() => handleCheckboxChange('all')} />
+                      <label htmlFor="all" className="ml-2 text-sm text-gray-700">All</label>
+                    </div>
+                    <div className="flex items-center">
+                      <input id="residential" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.residential} onChange={() => handleCheckboxChange('residential')} />
+                      <label htmlFor="residential" className="ml-2 text-sm text-gray-700">Residential</label>
+                    </div>
+                    <div className="flex items-center">
+                      <input id="commercial" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.commercial} onChange={() => handleCheckboxChange('commercial')} />
+                      <label htmlFor="commercial" className="ml-2 text-sm text-gray-700">Commercial</label>
+                    </div>
+                    <div className="flex items-center">
+                      <input id="other" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.other} onChange={() => handleCheckboxChange('other')} />
+                      <label htmlFor="other" className="ml-2 text-sm text-gray-700">Other</label>
+                    </div>
                   </div>
                 </div>
               )}
             </div>
 
             {/* Valuation Filter */}
-            <div className="flex items-center">
+            <div className="relative">
               <button
                 onClick={() => toggleCategory('valuation')}
-                className="text-sm font-medium text-gray-700 flex items-center"
+                className="text-sm font-medium text-gray-700 flex items-center bg-gray-100 px-4 py-2 rounded-md hover:bg-gray-200"
               >
                 Valuation
                 <ChevronDownIcon className={`h-4 w-4 ml-1 transform ${expandedCategories.valuation ? 'rotate-180' : ''}`} />
               </button>
               {expandedCategories.valuation && (
-                <div className="ml-4 flex gap-2">
-                  <div className="flex items-center">
-                    <input id="valuationRange" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.valuationRange} onChange={() => handleCheckboxChange('valuationRange')} />
-                    <label htmlFor="valuationRange" className="ml-2 text-sm text-gray-700">Valuation Range</label>
+                <div className="absolute z-10 mt-2 bg-white border border-gray-300 rounded-md shadow-lg p-4">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center">
+                      <input id="valuationRange" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.valuationRange} onChange={() => handleCheckboxChange('valuationRange')} />
+                      <label htmlFor="valuationRange" className="ml-2 text-sm text-gray-700">Valuation Range</label>
+                    </div>
+                    {checkboxStates.valuationRange && (
+                      <div className="mt-2">
+                        <input type="range" min="0" max="100" value={rangeValues.valuationRange[0]} onChange={(e) => handleRangeChange('valuationRange', [e.target.value, rangeValues.valuationRange[1]])} />
+                        <input type="range" min="0" max="100" value={rangeValues.valuationRange[1]} onChange={(e) => handleRangeChange('valuationRange', [rangeValues.valuationRange[0], e.target.value])} />
+                        <div className="text-sm text-gray-700">Range: {rangeValues.valuationRange[0]} - {rangeValues.valuationRange[1]}</div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
             </div>
 
             {/* Total Funding Filter */}
-            <div className="flex items-center">
+            <div className="relative">
               <button
                 onClick={() => toggleCategory('totalFunding')}
-                className="text-sm font-medium text-gray-700 flex items-center"
+                className="text-sm font-medium text-gray-700 flex items-center bg-gray-100 px-4 py-2 rounded-md hover:bg-gray-200"
               >
                 Total Funding
                 <ChevronDownIcon className={`h-4 w-4 ml-1 transform ${expandedCategories.totalFunding ? 'rotate-180' : ''}`} />
               </button>
               {expandedCategories.totalFunding && (
-                <div className="ml-4 flex gap-2">
-                  <div className="flex items-center">
-                    <input id="totalFunding" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.totalFunding} onChange={() => handleCheckboxChange('totalFunding')} />
-                    <label htmlFor="totalFunding" className="ml-2 text-sm text-gray-700">Total Funding</label>
+                <div className="absolute z-10 mt-2 bg-white border border-gray-300 rounded-md shadow-lg p-4">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center">
+                      <input id="totalFunding" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.totalFunding} onChange={() => handleCheckboxChange('totalFunding')} />
+                      <label htmlFor="totalFunding" className="ml-2 text-sm text-gray-700">Total Funding</label>
+                    </div>
+                    {checkboxStates.totalFunding && (
+                      <div className="mt-2">
+                        <input type="range" min="0" max="100" value={rangeValues.totalFunding[0]} onChange={(e) => handleRangeChange('totalFunding', [e.target.value, rangeValues.totalFunding[1]])} />
+                        <input type="range" min="0" max="100" value={rangeValues.totalFunding[1]} onChange={(e) => handleRangeChange('totalFunding', [rangeValues.totalFunding[0], e.target.value])} />
+                        <div className="text-sm text-gray-700">Range: {rangeValues.totalFunding[0]} - {rangeValues.totalFunding[1]}</div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
             </div>
 
             {/* Year Range Filter */}
-            <div className="flex items-center">
+            <div className="relative">
               <button
                 onClick={() => toggleCategory('yearRange')}
-                className="text-sm font-medium text-gray-700 flex items-center"
+                className="text-sm font-medium text-gray-700 flex items-center bg-gray-100 px-4 py-2 rounded-md hover:bg-gray-200"
               >
                 Year Range
                 <ChevronDownIcon className={`h-4 w-4 ml-1 transform ${expandedCategories.yearRange ? 'rotate-180' : ''}`} />
               </button>
               {expandedCategories.yearRange && (
-                <div className="ml-4 flex gap-2">
-                  <div className="flex items-center">
-                    <input id="yearRange" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.yearRange} onChange={() => handleCheckboxChange('yearRange')} />
-                    <label htmlFor="yearRange" className="ml-2 text-sm text-gray-700">Year Range</label>
+                <div className="absolute z-10 mt-2 bg-white border border-gray-300 rounded-md shadow-lg p-4">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center">
+                      <input id="yearRange" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.yearRange} onChange={() => handleCheckboxChange('yearRange')} />
+                      <label htmlFor="yearRange" className="ml-2 text-sm text-gray-700">Year Range</label>
+                    </div>
+                    {checkboxStates.yearRange && (
+                      <div className="mt-2">
+                        <input type="range" min="2000" max="2023" value={rangeValues.yearRange[0]} onChange={(e) => handleRangeChange('yearRange', [e.target.value, rangeValues.yearRange[1]])} />
+                        <input type="range" min="2000" max="2023" value={rangeValues.yearRange[1]} onChange={(e) => handleRangeChange('yearRange', [rangeValues.yearRange[0], e.target.value])} />
+                        <div className="text-sm text-gray-700">Range: {rangeValues.yearRange[0]} - {rangeValues.yearRange[1]}</div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -403,129 +432,6 @@ function AdvancedSearch() {
       </div>
 
       <div className="flex space-x-6">
-        {/* Filters Sidebar */}
-        <div className="w-64 flex-shrink-0">
-          <div className="bg-white rounded-lg shadow p-4">
-            <div className="text-lg font-medium text-gray-800 mb-4">Filters</div>
-            
-            {/* Property Type Filter */}
-            <div className="mb-4">
-              <button
-                onClick={() => toggleCategory('propType')}
-                className="flex items-center justify-between w-full mb-2 text-sm font-medium text-gray-700"
-              >
-                <span>Property Type</span>
-                <ChevronDownIcon className={`h-4 w-4 transform ${expandedCategories.propType ? 'rotate-180' : ''}`} />
-              </button>
-              {expandedCategories.propType && (
-                <div className="ml-2 space-y-2">
-                  <div className="flex items-center">
-                    <input id="all" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.all} onChange={() => handleCheckboxChange('all')} />
-                    <label htmlFor="all" className="ml-2 text-sm text-gray-700">All</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input id="residential" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.residential} onChange={() => handleCheckboxChange('residential')} />
-                    <label htmlFor="residential" className="ml-2 text-sm text-gray-700">Residential</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input id="commercial" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.commercial} onChange={() => handleCheckboxChange('commercial')} />
-                    <label htmlFor="commercial" className="ml-2 text-sm text-gray-700">Commercial</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input id="other" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.other} onChange={() => handleCheckboxChange('other')} />
-                    <label htmlFor="other" className="ml-2 text-sm text-gray-700">Other</label>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Valuation Filter */}
-            <div className="mb-4">
-              <button
-                onClick={() => toggleCategory('valuation')}
-                className="flex items-center justify-between w-full mb-2 text-sm font-medium text-gray-700"
-              >
-                <span>Valuation</span>
-                <ChevronDownIcon className={`h-4 w-4 transform ${expandedCategories.valuation ? 'rotate-180' : ''}`} />
-              </button>
-              {expandedCategories.valuation && (
-                <div className="ml-2 space-y-2">
-                  <div className="flex items-center">
-                    <input id="valuationRange" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.valuationRange} onChange={() => handleCheckboxChange('valuationRange')} />
-                    <label htmlFor="valuationRange" className="ml-2 text-sm text-gray-700">Valuation Range</label>
-                  </div>
-                  {checkboxStates.valuationRange && (
-                    <div className="mt-2">
-                      <input type="range" min="0" max="100" value={rangeValues.valuationRange[0]} onChange={(e) => handleRangeChange('valuationRange', [e.target.value, rangeValues.valuationRange[1]])} />
-                      <input type="range" min="0" max="100" value={rangeValues.valuationRange[1]} onChange={(e) => handleRangeChange('valuationRange', [rangeValues.valuationRange[0], e.target.value])} />
-                      <div>Range: {rangeValues.valuationRange[0]} - {rangeValues.valuationRange[1]}</div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Total Funding Filter */}
-            <div className="mb-4">
-              <button
-                onClick={() => toggleCategory('totalFunding')}
-                className="flex items-center justify-between w-full mb-2 text-sm font-medium text-gray-700"
-              >
-                <span>Total Funding</span>
-                <ChevronDownIcon className={`h-4 w-4 transform ${expandedCategories.totalFunding ? 'rotate-180' : ''}`} />
-              </button>
-              {expandedCategories.totalFunding && (
-                <div className="ml-2 space-y-2">
-                  <div className="flex items-center">
-                    <input id="totalFunding" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.totalFunding} onChange={() => handleCheckboxChange('totalFunding')} />
-                    <label htmlFor="totalFunding" className="ml-2 text-sm text-gray-700">Total Funding</label>
-                  </div>
-                  {checkboxStates.totalFunding && (
-                    <div className="mt-2">
-                      <input type="range" min="0" max="100" value={rangeValues.totalFunding[0]} onChange={(e) => handleRangeChange('totalFunding', [e.target.value, rangeValues.totalFunding[1]])} />
-                      <input type="range" min="0" max="100" value={rangeValues.totalFunding[1]} onChange={(e) => handleRangeChange('totalFunding', [rangeValues.totalFunding[0], e.target.value])} />
-                      <div>Range: {rangeValues.totalFunding[0]} - {rangeValues.totalFunding[1]}</div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Year Range Filter */}
-            <div className="mb-4">
-              <button
-                onClick={() => toggleCategory('yearRange')}
-                className="flex items-center justify-between w-full mb-2 text-sm font-medium text-gray-700"
-              >
-                <span>Year Range</span>
-                <ChevronDownIcon className={`h-4 w-4 transform ${expandedCategories.yearRange ? 'rotate-180' : ''}`} />
-              </button>
-              {expandedCategories.yearRange && (
-                <div className="ml-2 space-y-2">
-                  <div className="flex items-center">
-                    <input id="yearRange" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.yearRange} onChange={() => handleCheckboxChange('yearRange')} />
-                    <label htmlFor="yearRange" className="ml-2 text-sm text-gray-700">Year Range</label>
-                  </div>
-                  {checkboxStates.yearRange && (
-                    <div className="mt-2">
-                      <input type="range" min="2000" max="2023" value={rangeValues.yearRange[0]} onChange={(e) => handleRangeChange('yearRange', [e.target.value, rangeValues.yearRange[1]])} />
-                      <input type="range" min="2000" max="2023" value={rangeValues.yearRange[1]} onChange={(e) => handleRangeChange('yearRange', [rangeValues.yearRange[0], e.target.value])} />
-                      <div>Range: {rangeValues.yearRange[0]} - {rangeValues.yearRange[1]}</div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-            
-            <button 
-              onClick={applyFilters}
-              className="mt-2 w-full bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700"
-            >
-              Apply Filters
-            </button>
-          </div>
-        </div>
-        
         {/* Results */}
         <div className="flex-1">
           <div className="bg-white rounded-lg shadow overflow-hidden">
