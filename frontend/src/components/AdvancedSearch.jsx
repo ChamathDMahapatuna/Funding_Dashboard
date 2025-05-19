@@ -54,6 +54,7 @@ function AdvancedSearch() {
   });
 
   const [selectedCompany, setSelectedCompany] = useState(null);
+  const [showDetailsButton, setShowDetailsButton] = useState(null);
 
   const handleCheckboxChange = (checkboxId) => {
     setCheckboxStates(prev => ({
@@ -69,8 +70,13 @@ function AdvancedSearch() {
     }));
   };
 
+  const handleRowClick = (companyId) => {
+    setShowDetailsButton(companyId);
+  };
+
   const handleViewDetails = (company) => {
     setSelectedCompany(company);
+    setShowDetailsButton(null);
   };
 
   const closeDetails = () => {
@@ -92,7 +98,12 @@ function AdvancedSearch() {
           valuation: item['Latest Valuation'] || 'N/A',
           founded: item.Founded?.toString() || 'N/A',
           rounds: item['# of Funding Rounds']?.toString() || 'N/A',
-          location: `${item.City || ''}, ${item.State || ''}`.trim() || 'N/A'
+          location: `${item.City || ''}, ${item.State || ''}`.trim() || 'N/A',
+          Technology: item.Technology || 'N/A',
+          Domain: item.Domain || 'N/A',
+          'HQ Address': item['HQ Address'] || 'N/A',
+          AngelList: item.AngelList || 'N/A',
+          Crunchbase: item.Crunchbase || 'N/A',
         }));
         setSearchResults(transformedData);
         setLoading(false);
@@ -474,10 +485,6 @@ function AdvancedSearch() {
             {/* Results Table */}
             <div className="overflow-x-auto">
               <div className="relative">
-                {/* Horizontal Scrollbar */}
-                <div className="overflow-x-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 mb-2">
-                  <div style={{ width: 'max-content' }}></div>
-                </div>
                 <table className="min-w-full divide-y divide-gray-200 text-sm">
                   <thead className="bg-gray-100">
                     <tr>
@@ -491,16 +498,17 @@ function AdvancedSearch() {
                         Total Funding
                       </th>
                       <th scope="col" className="px-4 py-3 text-left font-medium text-gray-600 uppercase tracking-wider">
-                        Valuation
-                      </th>
-                      <th scope="col" className="px-4 py-3 text-left font-medium text-gray-600 uppercase tracking-wider">
-                        Actions
+                        Location
                       </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {filteredResults.map((company) => (
-                      <tr key={company.id} className="hover:bg-gray-50">
+                      <tr
+                        key={company.id}
+                        className="hover:bg-gray-50 cursor-pointer relative"
+                        onClick={() => handleRowClick(company.id)}
+                      >
                         <td className="px-4 py-3 whitespace-normal">
                           <div className="text-sm font-medium text-gray-800">{company.name}</div>
                         </td>
@@ -511,16 +519,21 @@ function AdvancedSearch() {
                           <div className="text-sm text-gray-600">{company.funding}</div>
                         </td>
                         <td className="px-4 py-3 whitespace-normal">
-                          <div className="text-sm text-gray-600">{company.valuation}</div>
+                          <div className="text-sm text-gray-600">{company.location}</div>
                         </td>
-                        <td className="px-4 py-3 whitespace-normal">
-                          <button
-                            onClick={() => handleViewDetails(company)}
-                            className="text-blue-600 hover:text-blue-800 text-sm"
-                          >
-                            View Details
-                          </button>
-                        </td>
+                        {showDetailsButton === company.id && (
+                          <td className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleViewDetails(company);
+                              }}
+                              className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700"
+                            >
+                              View Details
+                            </button>
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
@@ -531,17 +544,23 @@ function AdvancedSearch() {
             {/* Company Details Modal */}
             {selectedCompany && (
               <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
-                <div className="bg-white rounded-lg shadow-lg p-6 w-96">
+                <div className="bg-white rounded-lg shadow-lg p-6 w-96 max-h-[90vh] overflow-y-auto">
                   <h2 className="text-lg font-semibold text-gray-800 mb-4">
                     {selectedCompany.name} - Details
                   </h2>
-                  <div className="text-sm text-gray-600">
-                    <p><strong>Property Type:</strong> {selectedCompany.propType}</p>
-                    <p><strong>Total Funding:</strong> {selectedCompany.funding}</p>
-                    <p><strong>Valuation:</strong> {selectedCompany.valuation}</p>
-                    <p><strong>Founded:</strong> {selectedCompany.founded}</p>
-                    <p><strong>Funding Rounds:</strong> {selectedCompany.rounds}</p>
-                    <p><strong>Location:</strong> {selectedCompany.location}</p>
+                  <div className="text-sm text-gray-600 space-y-2">
+                    <div><strong>Property Type:</strong> {selectedCompany.propType}</div>
+                    <div><strong>Total Funding:</strong> {selectedCompany.funding}</div>
+                    <div><strong>Valuation:</strong> {selectedCompany.valuation}</div>
+                    <div><strong>Founded:</strong> {selectedCompany.founded}</div>
+                    <div><strong>Funding Rounds:</strong> {selectedCompany.rounds}</div>
+                    <div><strong>Location:</strong> {selectedCompany.location}</div>
+                    <div><strong>Technology:</strong> {selectedCompany.Technology || 'N/A'}</div>
+                    <div><strong>Domain:</strong> {selectedCompany.Domain || 'N/A'}</div>
+                    <div><strong>HQ Address:</strong> {selectedCompany['HQ Address'] || 'N/A'}</div>
+                    <div><strong>AngelList:</strong> {selectedCompany.AngelList || 'N/A'}</div>
+                    <div><strong>Crunchbase:</strong> {selectedCompany.Crunchbase || 'N/A'}</div>
+                    {/* Add more fields as needed */}
                   </div>
                   <div className="mt-4 flex justify-end">
                     <button
