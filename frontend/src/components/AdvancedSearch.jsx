@@ -468,55 +468,55 @@ function AdvancedSearch() {
                 <div className="overflow-x-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 mb-2">
                   <div style={{ width: 'max-content' }}></div>
                 </div>
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
+                <table className="min-w-full divide-y divide-gray-200 text-sm">
+                  <thead className="bg-gray-100">
                     <tr>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th scope="col" className="px-4 py-3 text-left font-medium text-gray-600 uppercase tracking-wider">
                         Company Name
                       </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th scope="col" className="px-4 py-3 text-left font-medium text-gray-600 uppercase tracking-wider">
                         Property Type
                       </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th scope="col" className="px-4 py-3 text-left font-medium text-gray-600 uppercase tracking-wider">
                         Total Funding
                       </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th scope="col" className="px-4 py-3 text-left font-medium text-gray-600 uppercase tracking-wider">
                         Valuation
                       </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th scope="col" className="px-4 py-3 text-left font-medium text-gray-600 uppercase tracking-wider">
                         Founded
                       </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th scope="col" className="px-4 py-3 text-left font-medium text-gray-600 uppercase tracking-wider">
                         Rounds
                       </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th scope="col" className="px-4 py-3 text-left font-medium text-gray-600 uppercase tracking-wider">
                         Location
                       </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {filteredResults.map((company) => (
-                      <tr key={company.id} className="hover:bg-gray-50 cursor-pointer">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-blue-600">{company.name}</div>
+                      <tr key={company.id} className="hover:bg-gray-50">
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="text-sm font-medium text-gray-800">{company.name}</div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{company.propType}</div>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="text-sm text-gray-600">{company.propType}</div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{company.funding}</div>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="text-sm text-gray-600">{company.funding}</div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{company.valuation}</div>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="text-sm text-gray-600">{company.valuation}</div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{company.founded}</div>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="text-sm text-gray-600">{company.founded}</div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{company.rounds}</div>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="text-sm text-gray-600">{company.rounds}</div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{company.location}</div>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="text-sm text-gray-600">{company.location}</div>
                         </td>
                       </tr>
                     ))}
