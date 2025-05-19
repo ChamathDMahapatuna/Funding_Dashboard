@@ -282,6 +282,99 @@ function AdvancedSearch() {
           </div>
         </div>
 
+        {/* Filters Section */}
+        <div className="px-6 pb-4">
+          <div className="flex flex-wrap gap-4 items-center">
+            {/* Property Type Filter */}
+            <div className="flex items-center">
+              <button
+                onClick={() => toggleCategory('propType')}
+                className="text-sm font-medium text-gray-700 flex items-center"
+              >
+                Property Type
+                <ChevronDownIcon className={`h-4 w-4 ml-1 transform ${expandedCategories.propType ? 'rotate-180' : ''}`} />
+              </button>
+              {expandedCategories.propType && (
+                <div className="ml-4 flex gap-2">
+                  <div className="flex items-center">
+                    <input id="all" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.all} onChange={() => handleCheckboxChange('all')} />
+                    <label htmlFor="all" className="ml-2 text-sm text-gray-700">All</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input id="residential" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.residential} onChange={() => handleCheckboxChange('residential')} />
+                    <label htmlFor="residential" className="ml-2 text-sm text-gray-700">Residential</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input id="commercial" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.commercial} onChange={() => handleCheckboxChange('commercial')} />
+                    <label htmlFor="commercial" className="ml-2 text-sm text-gray-700">Commercial</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input id="other" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.other} onChange={() => handleCheckboxChange('other')} />
+                    <label htmlFor="other" className="ml-2 text-sm text-gray-700">Other</label>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Valuation Filter */}
+            <div className="flex items-center">
+              <button
+                onClick={() => toggleCategory('valuation')}
+                className="text-sm font-medium text-gray-700 flex items-center"
+              >
+                Valuation
+                <ChevronDownIcon className={`h-4 w-4 ml-1 transform ${expandedCategories.valuation ? 'rotate-180' : ''}`} />
+              </button>
+              {expandedCategories.valuation && (
+                <div className="ml-4 flex gap-2">
+                  <div className="flex items-center">
+                    <input id="valuationRange" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.valuationRange} onChange={() => handleCheckboxChange('valuationRange')} />
+                    <label htmlFor="valuationRange" className="ml-2 text-sm text-gray-700">Valuation Range</label>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Total Funding Filter */}
+            <div className="flex items-center">
+              <button
+                onClick={() => toggleCategory('totalFunding')}
+                className="text-sm font-medium text-gray-700 flex items-center"
+              >
+                Total Funding
+                <ChevronDownIcon className={`h-4 w-4 ml-1 transform ${expandedCategories.totalFunding ? 'rotate-180' : ''}`} />
+              </button>
+              {expandedCategories.totalFunding && (
+                <div className="ml-4 flex gap-2">
+                  <div className="flex items-center">
+                    <input id="totalFunding" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.totalFunding} onChange={() => handleCheckboxChange('totalFunding')} />
+                    <label htmlFor="totalFunding" className="ml-2 text-sm text-gray-700">Total Funding</label>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Year Range Filter */}
+            <div className="flex items-center">
+              <button
+                onClick={() => toggleCategory('yearRange')}
+                className="text-sm font-medium text-gray-700 flex items-center"
+              >
+                Year Range
+                <ChevronDownIcon className={`h-4 w-4 ml-1 transform ${expandedCategories.yearRange ? 'rotate-180' : ''}`} />
+              </button>
+              {expandedCategories.yearRange && (
+                <div className="ml-4 flex gap-2">
+                  <div className="flex items-center">
+                    <input id="yearRange" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.yearRange} onChange={() => handleCheckboxChange('yearRange')} />
+                    <label htmlFor="yearRange" className="ml-2 text-sm text-gray-700">Year Range</label>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
         {/* Active Filters */}
         {selectedFilters.length > 0 && (
           <div className="px-6 pb-4">
@@ -464,63 +557,65 @@ function AdvancedSearch() {
             
             {/* Results Table */}
             <div className="overflow-x-auto">
-              <div className="overflow-x-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
-                <div className="overflow-x-scroll">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Company Name
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Property Type
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Total Funding
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Valuation
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Founded
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Rounds
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Location
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {filteredResults.map((company) => (
-                        <tr key={company.id} className="hover:bg-gray-50 cursor-pointer">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-blue-600">{company.name}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">{company.propType}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">{company.funding}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">{company.valuation}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">{company.founded}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">{company.rounds}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">{company.location}</div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+              <div className="relative">
+                {/* Horizontal Scrollbar */}
+                <div className="overflow-x-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 mb-2">
+                  <div style={{ width: 'max-content' }}></div>
                 </div>
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Company Name
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Property Type
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Total Funding
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Valuation
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Founded
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Rounds
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Location
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {filteredResults.map((company) => (
+                      <tr key={company.id} className="hover:bg-gray-50 cursor-pointer">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-blue-600">{company.name}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">{company.propType}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">{company.funding}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">{company.valuation}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">{company.founded}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">{company.rounds}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">{company.location}</div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
             
