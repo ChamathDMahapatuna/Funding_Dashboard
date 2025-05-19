@@ -497,25 +497,25 @@ function AdvancedSearch() {
                   <tbody className="bg-white divide-y divide-gray-200">
                     {filteredResults.map((company) => (
                       <tr key={company.id} className="hover:bg-gray-50">
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td className="px-4 py-3 whitespace-normal">
                           <div className="text-sm font-medium text-gray-800">{company.name}</div>
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td className="px-4 py-3 whitespace-normal">
                           <div className="text-sm text-gray-600">{company.propType}</div>
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td className="px-4 py-3 whitespace-normal">
                           <div className="text-sm text-gray-600">{company.funding}</div>
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td className="px-4 py-3 whitespace-normal">
                           <div className="text-sm text-gray-600">{company.valuation}</div>
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td className="px-4 py-3 whitespace-normal">
                           <div className="text-sm text-gray-600">{company.founded}</div>
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td className="px-4 py-3 whitespace-normal">
                           <div className="text-sm text-gray-600">{company.rounds}</div>
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td className="px-4 py-3 whitespace-normal">
                           <div className="text-sm text-gray-600">{company.location}</div>
                         </td>
                       </tr>
