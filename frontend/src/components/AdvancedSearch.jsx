@@ -45,6 +45,16 @@ function AdvancedSearch() {
     valuationRange: false,
     totalFunding: false,
     yearRange: false,
+    above2_5B: false,
+    range1_5B_2_5B: false,
+    range1B_1_5B: false,
+    range500M_1B: false,
+    below500M: false,
+    range0_100M: false,
+    range100M_300M: false,
+    range300M_700M: false,
+    range700M_1_5B: false,
+    range1_5B_4B: false,
   });
 
   const [rangeValues, setRangeValues] = useState({
@@ -304,7 +314,7 @@ function AdvancedSearch() {
         </div>
 
         {/* Filters Section */}
-        <div className="px-6 pb-4">
+        <div className="px-6 pb-4 flex justify-between items-center">
           <div className="flex flex-wrap gap-4 items-center">
             {/* Property Type Filter */}
             <div className="relative">
@@ -352,16 +362,25 @@ function AdvancedSearch() {
                 <div className="absolute z-10 mt-2 bg-white border border-gray-300 rounded-md shadow-lg p-4">
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center">
-                      <input id="valuationRange" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.valuationRange} onChange={() => handleCheckboxChange('valuationRange')} />
-                      <label htmlFor="valuationRange" className="ml-2 text-sm text-gray-700">Valuation Range</label>
+                      <input id="above2.5B" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.above2_5B} onChange={() => handleCheckboxChange('above2_5B')} />
+                      <label htmlFor="above2.5B" className="ml-2 text-sm text-gray-700">Above $2.5 Billion</label>
                     </div>
-                    {checkboxStates.valuationRange && (
-                      <div className="mt-2">
-                        <input type="range" min="0" max="100" value={rangeValues.valuationRange[0]} onChange={(e) => handleRangeChange('valuationRange', [e.target.value, rangeValues.valuationRange[1]])} />
-                        <input type="range" min="0" max="100" value={rangeValues.valuationRange[1]} onChange={(e) => handleRangeChange('valuationRange', [rangeValues.valuationRange[0], e.target.value])} />
-                        <div className="text-sm text-gray-700">Range: {rangeValues.valuationRange[0]} - {rangeValues.valuationRange[1]}</div>
-                      </div>
-                    )}
+                    <div className="flex items-center">
+                      <input id="1.5B-2.5B" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range1_5B_2_5B} onChange={() => handleCheckboxChange('range1_5B_2_5B')} />
+                      <label htmlFor="1.5B-2.5B" className="ml-2 text-sm text-gray-700">$1.5 Billion – $2.5 Billion</label>
+                    </div>
+                    <div className="flex items-center">
+                      <input id="1B-1.5B" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range1B_1_5B} onChange={() => handleCheckboxChange('range1B_1_5B')} />
+                      <label htmlFor="1B-1.5B" className="ml-2 text-sm text-gray-700">$1 Billion – $1.5 Billion</label>
+                    </div>
+                    <div className="flex items-center">
+                      <input id="500M-1B" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range500M_1B} onChange={() => handleCheckboxChange('range500M_1B')} />
+                      <label htmlFor="500M-1B" className="ml-2 text-sm text-gray-700">$500 Million – $1 Billion</label>
+                    </div>
+                    <div className="flex items-center">
+                      <input id="below500M" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.below500M} onChange={() => handleCheckboxChange('below500M')} />
+                      <label htmlFor="below500M" className="ml-2 text-sm text-gray-700">Below $500 Million</label>
+                    </div>
                   </div>
                 </div>
               )}
@@ -380,49 +399,38 @@ function AdvancedSearch() {
                 <div className="absolute z-10 mt-2 bg-white border border-gray-300 rounded-md shadow-lg p-4">
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center">
-                      <input id="totalFunding" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.totalFunding} onChange={() => handleCheckboxChange('totalFunding')} />
-                      <label htmlFor="totalFunding" className="ml-2 text-sm text-gray-700">Total Funding</label>
+                      <input id="0-100M" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range0_100M} onChange={() => handleCheckboxChange('range0_100M')} />
+                      <label htmlFor="0-100M" className="ml-2 text-sm text-gray-700">$0 – $100M</label>
                     </div>
-                    {checkboxStates.totalFunding && (
-                      <div className="mt-2">
-                        <input type="range" min="0" max="100" value={rangeValues.totalFunding[0]} onChange={(e) => handleRangeChange('totalFunding', [e.target.value, rangeValues.totalFunding[1]])} />
-                        <input type="range" min="0" max="100" value={rangeValues.totalFunding[1]} onChange={(e) => handleRangeChange('totalFunding', [rangeValues.totalFunding[0], e.target.value])} />
-                        <div className="text-sm text-gray-700">Range: {rangeValues.totalFunding[0]} - {rangeValues.totalFunding[1]}</div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Year Range Filter */}
-            <div className="relative">
-              <button
-                onClick={() => toggleCategory('yearRange')}
-                className="text-sm font-medium text-gray-700 flex items-center bg-gray-100 px-4 py-2 rounded-md hover:bg-gray-200"
-              >
-                Year Range
-                <ChevronDownIcon className={`h-4 w-4 ml-1 transform ${expandedCategories.yearRange ? 'rotate-180' : ''}`} />
-              </button>
-              {expandedCategories.yearRange && (
-                <div className="absolute z-10 mt-2 bg-white border border-gray-300 rounded-md shadow-lg p-4">
-                  <div className="flex flex-col gap-2">
                     <div className="flex items-center">
-                      <input id="yearRange" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.yearRange} onChange={() => handleCheckboxChange('yearRange')} />
-                      <label htmlFor="yearRange" className="ml-2 text-sm text-gray-700">Year Range</label>
+                      <input id="100M-300M" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range100M_300M} onChange={() => handleCheckboxChange('range100M_300M')} />
+                      <label htmlFor="100M-300M" className="ml-2 text-sm text-gray-700">$100M – $300M</label>
                     </div>
-                    {checkboxStates.yearRange && (
-                      <div className="mt-2">
-                        <input type="range" min="2000" max="2023" value={rangeValues.yearRange[0]} onChange={(e) => handleRangeChange('yearRange', [e.target.value, rangeValues.yearRange[1]])} />
-                        <input type="range" min="2000" max="2023" value={rangeValues.yearRange[1]} onChange={(e) => handleRangeChange('yearRange', [rangeValues.yearRange[0], e.target.value])} />
-                        <div className="text-sm text-gray-700">Range: {rangeValues.yearRange[0]} - {rangeValues.yearRange[1]}</div>
-                      </div>
-                    )}
+                    <div className="flex items-center">
+                      <input id="300M-700M" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range300M_700M} onChange={() => handleCheckboxChange('range300M_700M')} />
+                      <label htmlFor="300M-700M" className="ml-2 text-sm text-gray-700">$300M – $700M</label>
+                    </div>
+                    <div className="flex items-center">
+                      <input id="700M-1.5B" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range700M_1_5B} onChange={() => handleCheckboxChange('range700M_1_5B')} />
+                      <label htmlFor="700M-1.5B" className="ml-2 text-sm text-gray-700">$700M – $1.5B</label>
+                    </div>
+                    <div className="flex items-center">
+                      <input id="1.5B-4B+" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range1_5B_4B} onChange={() => handleCheckboxChange('range1_5B_4B')} />
+                      <label htmlFor="1.5B-4B+" className="ml-2 text-sm text-gray-700">$1.5B – $4B+</label>
+                    </div>
                   </div>
                 </div>
               )}
             </div>
           </div>
+
+          {/* Apply Filters Button */}
+          <button
+            onClick={applyFilters}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700"
+          >
+            Apply Filters
+          </button>
         </div>
 
         {/* Active Filters */}
@@ -498,6 +506,9 @@ function AdvancedSearch() {
                         Total Funding
                       </th>
                       <th scope="col" className="px-4 py-3 text-left font-medium text-gray-600 uppercase tracking-wider">
+                        Valuation
+                      </th>
+                      <th scope="col" className="px-4 py-3 text-left font-medium text-gray-600 uppercase tracking-wider">
                         Location
                       </th>
                     </tr>
@@ -517,6 +528,9 @@ function AdvancedSearch() {
                         </td>
                         <td className="px-4 py-3 whitespace-normal">
                           <div className="text-sm text-gray-600">{company.funding}</div>
+                        </td>
+                        <td className="px-4 py-3 whitespace-normal">
+                          <div className="text-sm text-gray-600">{company.valuation}</div>
                         </td>
                         <td className="px-4 py-3 whitespace-normal">
                           <div className="text-sm text-gray-600">{company.location}</div>
