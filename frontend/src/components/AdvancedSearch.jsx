@@ -39,7 +39,7 @@ function AdvancedSearch() {
 
   const [checkboxStates, setCheckboxStates] = useState({
     all: false,
-    residential: false,
+    residentialresiden: false,
     commercial: false,
     other: false,
     valuationRange: false,
@@ -161,7 +161,6 @@ function AdvancedSearch() {
 
   // Handle filter application
   const applyFilters = () => {
-
     const newFilters = [];
     let filterId = 1;
 
@@ -170,71 +169,155 @@ function AdvancedSearch() {
       newFilters.push({
         id: filterId++,
         category: 'Property Type',
-        value: 'Residential'
+        value: 'Residential',
       });
     }
     if (checkboxStates.commercial) {
       newFilters.push({
         id: filterId++,
         category: 'Property Type',
-        value: 'Commercial'
+        value: 'Commercial',
       });
     }
     if (checkboxStates.other) {
       newFilters.push({
         id: filterId++,
         category: 'Property Type',
-        value: 'Other'
+        value: 'Other',
       });
     }
+    if (checkboxStates.all) {
+      newFilters.push({
+        id: filterId++,
+        category: 'Property Type',
+        value: 'All',
+      });
+    }
+
+    // Add Valuation filters
+    if (checkboxStates.above2_5B) {
+      newFilters.push({
+        id: filterId++,
+        category: 'Valuation',
+        value: 'Above $2.5B',
+      });
+    }
+    if (checkboxStates.range1_5B_2_5B) {
+      newFilters.push({
+        id: filterId++,
+        category: 'Valuation',
+        value: '$1.5B – $2.5B',
+      });
+    }
+    if (checkboxStates.range1B_1_5B) {
+      newFilters.push({
+        id: filterId++,
+        category: 'Valuation',
+        value: '$1B – $1.5B',
+      });
+    }
+    if (checkboxStates.range500M_1B) {
+      newFilters.push({
+        id: filterId++,
+        category: 'Valuation',
+        value: '$500M – $1B',
+      });
+    }
+    if (checkboxStates.below500M) {
+      newFilters.push({
+        id: filterId++,
+        category: 'Valuation',
+        value: 'Below $500M',
+      });
+    }
+
+    // Add Total Funding filters
+    if (checkboxStates.range0_100M) {
+      newFilters.push({
+        id: filterId++,
+        category: 'Total Funding',
+        value: '$0 – $100M',
+      });
+    }
+    if (checkboxStates.range100M_300M) {
+      newFilters.push({
+        id: filterId++,
+        category: 'Total Funding',
+        value: '$100M – $300M',
+      });
+    }
+    if (checkboxStates.range300M_700M) {
+      newFilters.push({
+        id: filterId++,
+        category: 'Total Funding',
+        value: '$300M – $700M',
+      });
+    }
+    if (checkboxStates.range700M_1_5B) {
+      newFilters.push({
+        id: filterId++,
+        category: 'Total Funding',
+        value: '$700M – $1.5B',
+      });
+    }
+    if (checkboxStates.range1_5B_4B) {
+      newFilters.push({
+        id: filterId++,
+        category: 'Total Funding',
+        value: '$1.5B – $4B+',
+      });
+    }
+
     setSelectedFilters(newFilters);
-    // You can implement more complex filtering logic here based on selectedFilters
-    console.log('Applying filters:', selectedFilters);
-    console.log('Applying puka:', newFilters);
-    
-    // Example of how you might filter the data
-    // This would be replaced with actual API calls with filter parameters
-    const fetchFilteredData = async () => {
-      try {
-        setLoading(true);
-        // In a real implementation, you would add query parameters to your API call
-        // based on the selected filters
-        const response = await axios.get('http://localhost:5000/api/fundings');
-        // Then filter the results client-side based on selectedFilters
-        const filteredData = response.data.filter(item => {
-          // Example filter logic - adjust based on your actual filters
-          let matchesFilters = true;
-          
-          selectedFilters.forEach(filter => {
-            if (filter.category === 'Property Type' && filter.value === 'Residential') {
-              matchesFilters = matchesFilters && item['Prop Type'] === 'Residential';
-            }
-            // Add more filter conditions as needed
-          });
-          
-          return matchesFilters;
-        }).map((item, index) => ({
-          id: item._id || index,
-          name: item.Name || 'N/A',
-          propType: item['Prop Type'] || 'N/A',
-          funding: item['Total Funding'] || 'N/A',
-          valuation: item['Latest Valuation'] || 'N/A',
-          founded: item.Founded?.toString() || 'N/A',
-          rounds: item['# of Funding Rounds']?.toString() || 'N/A',
-          location: `${item.City || ''}, ${item.State || ''}`.trim() || 'N/A'
-        }));
-        
-        setSearchResults(filteredData);
-        setLoading(false);
-      } catch (err) {
-        console.error('Error applying filters:', err);
-        setError('Failed to apply filters. Please try again.');
-        setLoading(false);
-      }
-    };
-    
-    // Call the function to apply filters
-    fetchFilteredData();
+
+    // Filter the data based on selected filters
+    const filteredData = searchResults.filter((item) => {
+      let matchesFilters = true;
+
+      newFilters.forEach((filter) => {
+        if (filter.category === 'Property Type') {
+          if (filter.value === 'All') {
+            matchesFilters = true; // "All" matches everything
+          } else {
+            matchesFilters = matchesFilters && item.propType === filter.value;
+          }
+        }
+
+        if (filter.category === 'Valuation') {
+          const valuation = parseFloat(item.valuation.replace(/[^0-9.]/g, '')) || 0;
+          if (filter.value === 'Above $2.5B') {
+            matchesFilters = matchesFilters && valuation > 2500;
+          } else if (filter.value === '$1.5B – $2.5B') {
+            matchesFilters = matchesFilters && valuation >= 1500 && valuation <= 2500;
+          } else if (filter.value === '$1B – $1.5B') {
+            matchesFilters = matchesFilters && valuation >= 1000 && valuation < 1500;
+          } else if (filter.value === '$500M – $1B') {
+            matchesFilters = matchesFilters && valuation >= 500 && valuation < 1000;
+          } else if (filter.value === 'Below $500M') {
+            matchesFilters = matchesFilters && valuation < 500;
+          }
+        }
+
+        if (filter.category === 'Total Funding') {
+          const funding = parseFloat(item.funding.replace(/[^0-9.]/g, '')) || 0;
+          if (filter.value === '$0 – $100M') {
+            matchesFilters = matchesFilters && funding >= 0 && funding <= 100;
+          } else if (filter.value === '$100M – $300M') {
+            matchesFilters = matchesFilters && funding > 100 && funding <= 300;
+          } else if (filter.value === '$300M – $700M') {
+            matchesFilters = matchesFilters && funding > 300 && funding <= 700;
+          } else if (filter.value === '$700M – $1.5B') {
+            matchesFilters = matchesFilters && funding > 700 && funding <= 1500;
+          } else if (filter.value === '$1.5B – $4B+') {
+            matchesFilters = matchesFilters && funding > 1500;
+          }
+        }
+      });
+
+      return matchesFilters;
+    });
+
+    setSearchResults(filteredData);
   };
 
   // Clear all filters
