@@ -353,7 +353,7 @@ function AdvancedSearch() {
             <div className="relative">
               <button
                 onClick={() => toggleCategory('valuation')}
-                className="text-sm font-medium text-gray-700 flex items-center bg-gray-100 px-4 py-2 rounded-md hover:bg-gray-200"
+                className="text-sm font-medium text-gray-700 flex items-center bg-gray-100 px-12 py-2 rounded-md hover:bg-gray-200"
               >
                 Valuation
                 <ChevronDownIcon className={`h-4 w-4 ml-1 transform ${expandedCategories.valuation ? 'rotate-180' : ''}`} />
@@ -363,19 +363,19 @@ function AdvancedSearch() {
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center">
                       <input id="above2.5B" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.above2_5B} onChange={() => handleCheckboxChange('above2_5B')} />
-                      <label htmlFor="above2.5B" className="ml-2 text-sm text-gray-700">Above $2.5 Billion</label>
+                      <label htmlFor="above2.5B" className="ml-2 text-sm text-gray-700">Above $2.5</label>
                     </div>
                     <div className="flex items-center">
                       <input id="1.5B-2.5B" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range1_5B_2_5B} onChange={() => handleCheckboxChange('range1_5B_2_5B')} />
-                      <label htmlFor="1.5B-2.5B" className="ml-2 text-sm text-gray-700">$1.5 Billion – $2.5 Billion</label>
+                      <label htmlFor="1.5B-2.5B" className="ml-2 text-sm text-gray-700">$1.5 – $2.5 Billion</label>
                     </div>
                     <div className="flex items-center">
                       <input id="1B-1.5B" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range1B_1_5B} onChange={() => handleCheckboxChange('range1B_1_5B')} />
-                      <label htmlFor="1B-1.5B" className="ml-2 text-sm text-gray-700">$1 Billion – $1.5 Billion</label>
+                      <label htmlFor="1B-1.5B" className="ml-2 text-sm text-gray-700">$1 – $1.5 Billion</label>
                     </div>
                     <div className="flex items-center">
                       <input id="500M-1B" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range500M_1B} onChange={() => handleCheckboxChange('range500M_1B')} />
-                      <label htmlFor="500M-1B" className="ml-2 text-sm text-gray-700">$500 Million – $1 Billion</label>
+                      <label htmlFor="500M-1B" className="ml-2 text-sm text-gray-700">$500 – $1 Billion</label>
                     </div>
                     <div className="flex items-center">
                       <input id="below500M" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.below500M} onChange={() => handleCheckboxChange('below500M')} />
@@ -390,7 +390,7 @@ function AdvancedSearch() {
             <div className="relative">
               <button
                 onClick={() => toggleCategory('totalFunding')}
-                className="text-sm font-medium text-gray-700 flex items-center bg-gray-100 px-4 py-2 rounded-md hover:bg-gray-200"
+                className="text-sm font-medium text-gray-700 flex items-center bg-gray-100 px-10 py-2 rounded-md hover:bg-gray-200"
               >
                 Total Funding
                 <ChevronDownIcon className={`h-4 w-4 ml-1 transform ${expandedCategories.totalFunding ? 'rotate-180' : ''}`} />
