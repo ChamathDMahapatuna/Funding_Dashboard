@@ -32,9 +32,6 @@ function AdvancedSearch() {
   
   const [expandedCategories, setExpandedCategories] = useState({
     propType: false,
-    valuation: false,
-    totalFunding: false,
-    yearRange: false,
   });
 
   const [checkboxStates, setCheckboxStates] = useState({
@@ -42,25 +39,6 @@ function AdvancedSearch() {
     residentialresiden: false,
     commercial: false,
     other: false,
-    valuationRange: false,
-    totalFunding: false,
-    yearRange: false,
-    above2_5B: false,
-    range1_5B_2_5B: false,
-    range1B_1_5B: false,
-    range500M_1B: false,
-    below500M: false,
-    range0_100M: false,
-    range100M_300M: false,
-    range300M_700M: false,
-    range700M_1_5B: false,
-    range1_5B_4B: false,
-  });
-
-  const [rangeValues, setRangeValues] = useState({
-    valuationRange: [0, 100],
-    totalFunding: [0, 100],
-    yearRange: [2000, 2023],
   });
 
   const [selectedCompany, setSelectedCompany] = useState(null);
@@ -70,13 +48,6 @@ function AdvancedSearch() {
     setCheckboxStates(prev => ({
       ...prev,
       [checkboxId]: !prev[checkboxId]
-    }));
-  };
-
-  const handleRangeChange = (rangeId, values) => {
-    setRangeValues(prev => ({
-      ...prev,
-      [rangeId]: values
     }));
   };
 
@@ -161,6 +132,7 @@ function AdvancedSearch() {
 
   // Handle filter application
   const applyFilters = () => {
+
     const newFilters = [];
     let filterId = 1;
 
@@ -169,155 +141,88 @@ function AdvancedSearch() {
       newFilters.push({
         id: filterId++,
         category: 'Property Type',
-        value: 'Residential',
+        value: 'Residential'
       });
     }
     if (checkboxStates.commercial) {
       newFilters.push({
         id: filterId++,
         category: 'Property Type',
-        value: 'Commercial',
+        value: 'Commercial'
       });
     }
     if (checkboxStates.other) {
       newFilters.push({
         id: filterId++,
         category: 'Property Type',
-        value: 'Other',
+        value: 'Other'
       });
     }
     if (checkboxStates.all) {
       newFilters.push({
         id: filterId++,
         category: 'Property Type',
-        value: 'All',
+        value: 'All'
       });
     }
-
-    // Add Valuation filters
-    if (checkboxStates.above2_5B) {
-      newFilters.push({
-        id: filterId++,
-        category: 'Valuation',
-        value: 'Above $2.5B',
-      });
-    }
-    if (checkboxStates.range1_5B_2_5B) {
-      newFilters.push({
-        id: filterId++,
-        category: 'Valuation',
-        value: '$1.5B – $2.5B',
-      });
-    }
-    if (checkboxStates.range1B_1_5B) {
-      newFilters.push({
-        id: filterId++,
-        category: 'Valuation',
-        value: '$1B – $1.5B',
-      });
-    }
-    if (checkboxStates.range500M_1B) {
-      newFilters.push({
-        id: filterId++,
-        category: 'Valuation',
-        value: '$500M – $1B',
-      });
-    }
-    if (checkboxStates.below500M) {
-      newFilters.push({
-        id: filterId++,
-        category: 'Valuation',
-        value: 'Below $500M',
-      });
-    }
-
-    // Add Total Funding filters
-    if (checkboxStates.range0_100M) {
-      newFilters.push({
-        id: filterId++,
-        category: 'Total Funding',
-        value: '$0 – $100M',
-      });
-    }
-    if (checkboxStates.range100M_300M) {
-      newFilters.push({
-        id: filterId++,
-        category: 'Total Funding',
-        value: '$100M – $300M',
-      });
-    }
-    if (checkboxStates.range300M_700M) {
-      newFilters.push({
-        id: filterId++,
-        category: 'Total Funding',
-        value: '$300M – $700M',
-      });
-    }
-    if (checkboxStates.range700M_1_5B) {
-      newFilters.push({
-        id: filterId++,
-        category: 'Total Funding',
-        value: '$700M – $1.5B',
-      });
-    }
-    if (checkboxStates.range1_5B_4B) {
-      newFilters.push({
-        id: filterId++,
-        category: 'Total Funding',
-        value: '$1.5B – $4B+',
-      });
-    }
-
     setSelectedFilters(newFilters);
+    // You can implement more complex filtering logic here based on selectedFilters
+    console.log('Applying filters:', selectedFilters);
+    console.log('Applying puka:', newFilters);
+    
+    // Example of how you might filter the data
+    // This would be replaced with actual API calls with filter parameters
+    const fetchFilteredData = async () => {
+      try {
+        setLoading(true);
+        // In a real implementation, you would add query parameters to your API call
+        // based on the selected filters
+        const response = await axios.get('http://localhost:5000/api/fundings');
+        // Then filter the results client-side based on selectedFilters
+        const filteredData = response.data.filter(item => {
+          // Example filter logic - adjust based on your actual filters
+          let matchesFilters = true;
+          
+          selectedFilters.forEach(filter => {
+            if (filter.category === 'Property Type' && filter.value === 'Residential') {
+              matchesFilters = matchesFilters && item['Prop Type'] === 'Residential';
+            }
+            if (filter.category === 'Property Type' && filter.value === 'Commercial') {
+              matchesFilters = matchesFilters && item['Prop Type'] === 'Commercial';
+            }
+            if (filter.category === 'Property Type' && filter.value === 'Other') {
+              matchesFilters = matchesFilters && item['Prop Type'] === 'Other';
+            }
 
-    // Filter the data based on selected filters
-    const filteredData = searchResults.filter((item) => {
-      let matchesFilters = true;
-
-      newFilters.forEach((filter) => {
-        if (filter.category === 'Property Type') {
-          if (filter.value === 'All') {
-            matchesFilters = true; // "All" matches everything
-          } else {
-            matchesFilters = matchesFilters && item.propType === filter.value;
-          }
-        }
-
-        if (filter.category === 'Valuation') {
-          const valuation = parseFloat(item.valuation.replace(/[^0-9.]/g, '')) || 0;
-          if (filter.value === 'Above $2.5B') {
-            matchesFilters = matchesFilters && valuation > 2500;
-          } else if (filter.value === '$1.5B – $2.5B') {
-            matchesFilters = matchesFilters && valuation >= 1500 && valuation <= 2500;
-          } else if (filter.value === '$1B – $1.5B') {
-            matchesFilters = matchesFilters && valuation >= 1000 && valuation < 1500;
-          } else if (filter.value === '$500M – $1B') {
-            matchesFilters = matchesFilters && valuation >= 500 && valuation < 1000;
-          } else if (filter.value === 'Below $500M') {
-            matchesFilters = matchesFilters && valuation < 500;
-          }
-        }
-
-        if (filter.category === 'Total Funding') {
-          const funding = parseFloat(item.funding.replace(/[^0-9.]/g, '')) || 0;
-          if (filter.value === '$0 – $100M') {
-            matchesFilters = matchesFilters && funding >= 0 && funding <= 100;
-          } else if (filter.value === '$100M – $300M') {
-            matchesFilters = matchesFilters && funding > 100 && funding <= 300;
-          } else if (filter.value === '$300M – $700M') {
-            matchesFilters = matchesFilters && funding > 300 && funding <= 700;
-          } else if (filter.value === '$700M – $1.5B') {
-            matchesFilters = matchesFilters && funding > 700 && funding <= 1500;
-          } else if (filter.value === '$1.5B – $4B+') {
-            matchesFilters = matchesFilters && funding > 1500;
-          }
-        }
-      });
-
-      return matchesFilters;
-    });
-
-    setSearchResults(filteredData);
+             if (filter.category === 'Property Type' && filter.value === 'All') {
+              matchesFilters = matchesFilters && item['Prop Type'] === 'All';
+            }
+            // Add more filter conditions as needed
+          });
+          
+          return matchesFilters;
+        }).map((item, index) => ({
+          id: item._id || index,
+          name: item.Name || 'N/A',
+          propType: item['Prop Type'] || 'N/A',
+          funding: item['Total Funding'] || 'N/A',
+          valuation: item['Latest Valuation'] || 'N/A',
+          founded: item.Founded?.toString() || 'N/A',
+          rounds: item['# of Funding Rounds']?.toString() || 'N/A',
+          location: `${item.City || ''}, ${item.State || ''}`.trim() || 'N/A'
+        }));
+        
+        setSearchResults(filteredData);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error applying filters:', err);
+        setError('Failed to apply filters. Please try again.');
+        setLoading(false);
+      }
+    };
+    
+    // Call the function to apply filters
+    fetchFilteredData();
   };
 
   // Clear all filters
@@ -426,80 +331,6 @@ function AdvancedSearch() {
                     <div className="flex items-center">
                       <input id="other" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.other} onChange={() => handleCheckboxChange('other')} />
                       <label htmlFor="other" className="ml-2 text-sm text-gray-700">Other</label>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Valuation Filter */}
-            <div className="relative">
-              <button
-                onClick={() => toggleCategory('valuation')}
-                className="text-sm font-medium text-gray-700 flex items-center bg-gray-100 px-12 py-2 rounded-md hover:bg-gray-200"
-              >
-                Valuation
-                <ChevronDownIcon className={`h-4 w-4 ml-1 transform ${expandedCategories.valuation ? 'rotate-180' : ''}`} />
-              </button>
-              {expandedCategories.valuation && (
-                <div className="absolute z-10 mt-2 bg-white border border-gray-300 rounded-md shadow-lg p-4">
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center">
-                      <input id="above2.5B" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.above2_5B} onChange={() => handleCheckboxChange('above2_5B')} />
-                      <label htmlFor="above2.5B" className="ml-2 text-sm text-gray-700">Above $2.5</label>
-                    </div>
-                    <div className="flex items-center">
-                      <input id="1.5B-2.5B" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range1_5B_2_5B} onChange={() => handleCheckboxChange('range1_5B_2_5B')} />
-                      <label htmlFor="1.5B-2.5B" className="ml-2 text-sm text-gray-700">$1.5 – $2.5 Billion</label>
-                    </div>
-                    <div className="flex items-center">
-                      <input id="1B-1.5B" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range1B_1_5B} onChange={() => handleCheckboxChange('range1B_1_5B')} />
-                      <label htmlFor="1B-1.5B" className="ml-2 text-sm text-gray-700">$1 – $1.5 Billion</label>
-                    </div>
-                    <div className="flex items-center">
-                      <input id="500M-1B" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range500M_1B} onChange={() => handleCheckboxChange('range500M_1B')} />
-                      <label htmlFor="500M-1B" className="ml-2 text-sm text-gray-700">$500 – $1 Billion</label>
-                    </div>
-                    <div className="flex items-center">
-                      <input id="below500M" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.below500M} onChange={() => handleCheckboxChange('below500M')} />
-                      <label htmlFor="below500M" className="ml-2 text-sm text-gray-700">Below $500 Million</label>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Total Funding Filter */}
-            <div className="relative">
-              <button
-                onClick={() => toggleCategory('totalFunding')}
-                className="text-sm font-medium text-gray-700 flex items-center bg-gray-100 px-10 py-2 rounded-md hover:bg-gray-200"
-              >
-                Total Funding
-                <ChevronDownIcon className={`h-4 w-4 ml-1 transform ${expandedCategories.totalFunding ? 'rotate-180' : ''}`} />
-              </button>
-              {expandedCategories.totalFunding && (
-                <div className="absolute z-10 mt-2 bg-white border border-gray-300 rounded-md shadow-lg p-4">
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center">
-                      <input id="0-100M" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range0_100M} onChange={() => handleCheckboxChange('range0_100M')} />
-                      <label htmlFor="0-100M" className="ml-2 text-sm text-gray-700">$0 – $100M</label>
-                    </div>
-                    <div className="flex items-center">
-                      <input id="100M-300M" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range100M_300M} onChange={() => handleCheckboxChange('range100M_300M')} />
-                      <label htmlFor="100M-300M" className="ml-2 text-sm text-gray-700">$100M – $300M</label>
-                    </div>
-                    <div className="flex items-center">
-                      <input id="300M-700M" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range300M_700M} onChange={() => handleCheckboxChange('range300M_700M')} />
-                      <label htmlFor="300M-700M" className="ml-2 text-sm text-gray-700">$300M – $700M</label>
-                    </div>
-                    <div className="flex items-center">
-                      <input id="700M-1.5B" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range700M_1_5B} onChange={() => handleCheckboxChange('range700M_1_5B')} />
-                      <label htmlFor="700M-1.5B" className="ml-2 text-sm text-gray-700">$700M – $1.5B</label>
-                    </div>
-                    <div className="flex items-center">
-                      <input id="1.5B-4B+" type="checkbox" className="h-4 w-4 text-blue-600" checked={checkboxStates.range1_5B_4B} onChange={() => handleCheckboxChange('range1_5B_4B')} />
-                      <label htmlFor="1.5B-4B+" className="ml-2 text-sm text-gray-700">$1.5B – $4B+</label>
                     </div>
                   </div>
                 </div>
